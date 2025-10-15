@@ -5,6 +5,7 @@ public class Productos {
 	private String descripcion;
 	private float precio;
 	private int stock;
+	private int id;
 	
 	public Productos() {	
 	}
@@ -15,6 +16,7 @@ public class Productos {
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.stock = stock;
+		this.id = 0;
 	}
 
 	public String getNombre() {
@@ -40,6 +42,14 @@ public class Productos {
 	}
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
