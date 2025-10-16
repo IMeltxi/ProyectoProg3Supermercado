@@ -8,10 +8,10 @@ public class Compra extends Productos {
 	private int idUsuario;
 	private HashMap<String, Integer> productos;// Mapa de productos y sus cantidades
 	private LocalDate fechaCompra;
-	private float precioTotal;
+	private double precioTotal;
 	
 	public Compra(int id, int idUsuario, HashMap<String, Integer> productos, LocalDate fechaCompra,
-			float precioTotal) {
+			double precioTotal) {
 		super();
 		this.id = id;
 		this.idUsuario = idUsuario;
@@ -24,7 +24,7 @@ public class Compra extends Productos {
 		this.idUsuario = 0;
 		this.productos = new HashMap<>();
 		this.fechaCompra = LocalDate.now();
-		this.precioTotal = 0.0f;
+		this.precioTotal = 0.0;
 	}
 	
 	public int getId() {
@@ -51,10 +51,10 @@ public class Compra extends Productos {
 	public void setFechaCompra(LocalDate fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
-	public float getPrecioTotal() {
+	public double getPrecioTotal() {
 		return precioTotal;
 	}
-	public void setPrecioTotal(float precioTotal) {
+	public void setPrecioTotal(double precioTotal) {
 		this.precioTotal = precioTotal;
 	}
 	

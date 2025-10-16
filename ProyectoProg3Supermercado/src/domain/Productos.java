@@ -7,6 +7,8 @@ public class Productos {
 	private int stock;
 	private int id;
 	
+	public Productos() {	
+	}
 	
 	public Productos(String nombre, String descripcion, float precio, int stock) {
 		super();
