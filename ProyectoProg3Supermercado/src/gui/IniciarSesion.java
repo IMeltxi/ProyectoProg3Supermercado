@@ -22,7 +22,7 @@ import javax.swing.border.TitledBorder;
 public class IniciarSesion extends JFrame {
     private static final long serialVersionUID = 1L;
     private JTextField correoField;
-    private JPasswordField contraseñaField;
+    private JPasswordField contrasenaField;
 
     public IniciarSesion() {
         // Configuración de la ventana
@@ -46,7 +46,7 @@ public class IniciarSesion extends JFrame {
         // Panel interior con BoxLayout
         JPanel panelBotones = new JPanel();
         TitledBorder titledBorder = BorderFactory.createTitledBorder("Inicio de Sesión");
-        panelBotones.setBorder(BorderFactory.createCompoundBorder(titledBorder, new EmptyBorder(20, 20, 20, 20)));
+        panelBotones.setBorder(BorderFactory.createCompoundBorder(titledBorder, new EmptyBorder(20, 200, 20, 200)));
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
 
         // Etiqueta y campo de correo
@@ -55,30 +55,30 @@ public class IniciarSesion extends JFrame {
         panelBotones.add(correoLabel);
 
         correoField = new JTextField(20);
-        correoField.setMaximumSize(new Dimension(400, 30));
+        correoField.setMaximumSize(new Dimension(400, 20));
         correoField.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(correoField);
 
-        panelBotones.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelBotones.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Etiqueta y campo de contraseña
-        JLabel contraseñaLabel = new JLabel("Contraseña:");
-        contraseñaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelBotones.add(contraseñaLabel);
+        // Etiqueta y campo de contrasena
+        JLabel contrasenaLabel = new JLabel("contrasena:");
+        contrasenaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelBotones.add(contrasenaLabel);
 
-        contraseñaField = new JPasswordField(20);
-        contraseñaField.setMaximumSize(new Dimension(400, 30));
-        contraseñaField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelBotones.add(contraseñaField);
+        contrasenaField = new JPasswordField(20);
+        contrasenaField.setMaximumSize(new Dimension(400, 30));
+        contrasenaField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelBotones.add(contrasenaField);
 
-        panelBotones.add(Box.createRigidArea(new Dimension(0, 20)));
+        panelBotones.add(Box.createRigidArea(new Dimension(0, 50)));
 
         // Botón Iniciar Sesión
         JButton botonInicioSesion = new JButton("Iniciar Sesión");
         botonInicioSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(botonInicioSesion);
 
-        panelBotones.add(Box.createRigidArea(new Dimension(0, 20)));
+        panelBotones.add(Box.createRigidArea(new Dimension(0, 50)));
 
         // Etiqueta y botón de registro
         JLabel registroEtiqueta = new JLabel("Regístrate si no tienes cuenta");
