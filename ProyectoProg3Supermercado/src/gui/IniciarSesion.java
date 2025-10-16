@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -88,6 +90,19 @@ public class IniciarSesion extends JFrame {
         JButton botonRegistrate = new JButton("Registrarse");
         botonRegistrate.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(botonRegistrate);
+        
+        botonRegistrate.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == botonRegistrate) {
+					dispose();
+					RegistroSesion reg = new RegistroSesion();
+					reg.setVisible(true);
+				}
+				
+			}
+		});
 
         // Agregar panel interior al principal
         panelprincipal.add(panelBotones, gbc);
