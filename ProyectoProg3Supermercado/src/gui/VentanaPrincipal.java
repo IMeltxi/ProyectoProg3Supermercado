@@ -57,49 +57,49 @@ public class VentanaPrincipal extends JFrame {
     	panelNorteCentro.setBackground(Color.white);
     	
     		
-    		 JLabel lblTitulo = new JLabel("MercaDeusto");
+    	JLabel lblTitulo = new JLabel("MercaDeusto");
     	     lblTitulo.setFont(new Font("Comic Sans MS", Font.BOLD, 50));
     			
-    		panelNorteCentro.add(lblTitulo);
+    	panelNorteCentro.add(lblTitulo);
     			
     		
     		
-    		//BOTONES INICIO, MI LISTA, (PANEL_NORTE_IZQUIERDA)
-    		JPanel panelNorteIzquierda = new JPanel();
-    		panelNorteIzquierda.setBackground(new Color(0x013ADF));
+   		//BOTONES INICIO, MI LISTA, (PANEL_NORTE_IZQUIERDA)
+   		JPanel panelNorteIzquierda = new JPanel();
+   		panelNorteIzquierda.setBackground(new Color(0x013ADF));
+   		
+   		panelNorteIzquierda.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
     		
-    		panelNorteIzquierda.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
+   		//BOTONES DE LA BARRA NORTE IZQ
+   		ArrayList<JButton> menu = new ArrayList<JButton>();
     		
-    		//BOTONES DE LA BARRA NORTE IZQ
-    		ArrayList<JButton> menu = new ArrayList<JButton>();
+    	ImageIcon iconoInicio = new ImageIcon("fotos_png/Inicio.png");
+    	Image imagenEscaladaInicio = iconoInicio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Ajustar dimensiones (150x50 como ejemplo)
+    	ImageIcon iconoRedimensionado = new ImageIcon(imagenEscaladaInicio);
     		
-    		ImageIcon iconoInicio = new ImageIcon("fotos_png/Inicio.png");
-    		Image imagenEscaladaInicio = iconoInicio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Ajustar dimensiones (150x50 como ejemplo)
-    		ImageIcon iconoRedimensionado = new ImageIcon(imagenEscaladaInicio);
-    		
-    		JButton botonInicio = new JButton(iconoRedimensionado);
-    		botonInicio.setBackground(Color.WHITE);
-    		botonInicio.setBorder(new LineBorder(Color.black, 2));
-    	    panelNorteIzquierda.add(botonInicio);
+    	JButton botonInicio = new JButton(iconoRedimensionado);
+    	botonInicio.setBackground(Color.WHITE);
+    	botonInicio.setBorder(new LineBorder(Color.black, 2));
+        panelNorteIzquierda.add(botonInicio);
     	
-    	    botonInicio.addActionListener(e -> {
-    	    	pCentral.removeAll();
-    	    	//PanelPrincipalContenido panelPrincipal = new PanelPrincipalContenido();
-    			//pCentral.add(panelPrincipal);
-    			pCentral.revalidate();
-    		    pCentral.repaint();
+       botonInicio.addActionListener(e -> {
+   	    	pCentral.removeAll();
+   	    	//PanelPrincipalContenido panelPrincipal = new PanelPrincipalContenido();
+   			//pCentral.add(panelPrincipal);
+   			pCentral.revalidate();
+   		    pCentral.repaint();
     		   
     		});
     	    
     		
     		
-    		JButton botonMiLista = new JButton("Mi Lista");
-    		menu.add(botonMiLista);
+    	JButton botonMiLista = new JButton("Mi Lista");
+    	menu.add(botonMiLista);
     		
-    		botonMiLista.addActionListener(e -> {
-    			pCentral.removeAll();
-    			//PanelMiLista pMiLista = new PanelMiLista(perfil);
-    			//pCentral.add(pMiLista);
+    	botonMiLista.addActionListener(e -> {
+    		pCentral.removeAll();
+    		//PanelMiLista pMiLista = new PanelMiLista(perfil);
+    		//pCentral.add(pMiLista);
     			pCentral.revalidate();
     		    pCentral.repaint();
     		});

@@ -27,6 +27,9 @@ public class IniciarSesion extends JFrame {
     private JPasswordField contrasenaField;
 
     public IniciarSesion() {
+    	
+    	JFrame vActual = this;
+    	
         // Configuración de la ventana
         setTitle("Iniciar Sesión");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -48,16 +51,17 @@ public class IniciarSesion extends JFrame {
         // Panel interior con BoxLayout
         JPanel panelBotones = new JPanel();
         TitledBorder titledBorder = BorderFactory.createTitledBorder("Inicio de Sesión");
-        panelBotones.setBorder(BorderFactory.createCompoundBorder(titledBorder, new EmptyBorder(20, 200, 20, 200)));
+        panelBotones.setBorder(BorderFactory.createCompoundBorder(titledBorder, new EmptyBorder(60, 200, 60, 200)));
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
 
         // Etiqueta y campo de correo
         JLabel correoLabel = new JLabel("Correo:");
+        correoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         correoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(correoLabel);
 
         correoField = new JTextField(20);
-        correoField.setMaximumSize(new Dimension(400, 20));
+        correoField.setMaximumSize(new Dimension(400, 30));
         correoField.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(correoField);
 
@@ -65,6 +69,7 @@ public class IniciarSesion extends JFrame {
 
         // Etiqueta y campo de contrasena
         JLabel contrasenaLabel = new JLabel("contrasena:");
+        contrasenaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         contrasenaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(contrasenaLabel);
 
@@ -77,6 +82,7 @@ public class IniciarSesion extends JFrame {
 
         // Botón Iniciar Sesión
         JButton botonInicioSesion = new JButton("Iniciar Sesión");
+        botonInicioSesion.setFont(new Font("Arial", Font.BOLD, 16));
         botonInicioSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(botonInicioSesion);
 
@@ -84,17 +90,38 @@ public class IniciarSesion extends JFrame {
 
         // Etiqueta y botón de registro
         JLabel registroEtiqueta = new JLabel("Regístrate si no tienes cuenta");
+        registroEtiqueta.setFont(new Font("Arial", Font.ITALIC, 14));
         registroEtiqueta.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(registroEtiqueta);
 
         JButton botonRegistrate = new JButton("Registrarse");
+        botonRegistrate.setFont(new Font("Arial", Font.BOLD, 16));
         botonRegistrate.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(botonRegistrate);
+        
+        botonInicioSesion.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String usuarioPuesto = correoField.getText();
+				char[] password = contrasenaField.getPassword();
+				String passwordStr = new String(password);
+				
+				if(usuarioPuesto.equals("admin") && passwordStr.equals("admin123") ) {
+					vActual.setVisible(false);
+					new VentanaAdministrador(vActual);
+				}else {
+					//para cuando este la base de datos
+				}
+				
+			}
+		});
         
         botonRegistrate.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(e.getSource() == botonRegistrate) {
 					dispose();
 					RegistroSesion reg = new RegistroSesion();
