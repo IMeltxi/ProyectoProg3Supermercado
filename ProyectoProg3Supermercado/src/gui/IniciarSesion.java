@@ -1,60 +1,52 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import domain.Cliente;
+import domain.Productos;
+
 public class IniciarSesion extends JFrame {
-    private static final long serialVersionUID = 1L;
     private JTextField correoField;
     private JPasswordField contrasenaField;
 
-    public IniciarSesion() {
-    	
-    	JFrame vActual = this;
-    	
-        // Configuración de la ventana
+    private List<Cliente> clientes;
+    private List<Productos> productos;
+
+    public IniciarSesion(List<Cliente> clientes, List<Productos> productos) {
+        this.clientes = clientes;
+        this.productos = productos;
+
+        JFrame vActual = this;
+
+        // Configuración de ventana
         setTitle("Iniciar Sesión");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel principal con GridBagLayout para centrar
         JPanel panelprincipal = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        
+
         JLabel tituloLabel = new JLabel("MERCADEUSTO", JLabel.CENTER);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 48)); 
-        tituloLabel.setBorder(new EmptyBorder(200, 0, 40, 0)); 
+        tituloLabel.setFont(new Font("Arial", Font.BOLD, 48));
+        tituloLabel.setBorder(new EmptyBorder(200, 0, 40, 0));
         add(tituloLabel, BorderLayout.NORTH);
 
-        // Panel interior con BoxLayout
         JPanel panelBotones = new JPanel();
         TitledBorder titledBorder = BorderFactory.createTitledBorder("Inicio de Sesión");
         panelBotones.setBorder(BorderFactory.createCompoundBorder(titledBorder, new EmptyBorder(60, 200, 60, 200)));
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
 
-        // Etiqueta y campo de correo
         JLabel correoLabel = new JLabel("Correo:");
         correoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         correoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -67,7 +59,6 @@ public class IniciarSesion extends JFrame {
 
         panelBotones.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Etiqueta y campo de contrasena
         JLabel contrasenaLabel = new JLabel("contrasena:");
         contrasenaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         contrasenaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -80,7 +71,6 @@ public class IniciarSesion extends JFrame {
 
         panelBotones.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        // Botón Iniciar Sesión
         JButton botonInicioSesion = new JButton("Iniciar Sesión");
         botonInicioSesion.setFont(new Font("Arial", Font.BOLD, 16));
         botonInicioSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -88,7 +78,6 @@ public class IniciarSesion extends JFrame {
 
         panelBotones.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        // Etiqueta y botón de registro
         JLabel registroEtiqueta = new JLabel("Regístrate si no tienes cuenta");
         registroEtiqueta.setFont(new Font("Arial", Font.ITALIC, 14));
         registroEtiqueta.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,50 +87,32 @@ public class IniciarSesion extends JFrame {
         botonRegistrate.setFont(new Font("Arial", Font.BOLD, 16));
         botonRegistrate.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(botonRegistrate);
-        
-        botonInicioSesion.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String usuarioPuesto = correoField.getText();
-				char[] password = contrasenaField.getPassword();
-				String passwordStr = new String(password);
-				
-				if(usuarioPuesto.equals("admin") && passwordStr.equals("admin123") ) {
-					vActual.setVisible(false);
-					new VentanaAdministrador(vActual);
-				}else {
-					//para cuando este la base de datos
-				}
-				
-			}
-		});
-        
-        botonRegistrate.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if(e.getSource() == botonRegistrate) {
-					dispose();
-					RegistroSesion reg = new RegistroSesion();
-					reg.setVisible(true);
-				}
-				
-			}
-		});
 
-        // Agregar panel interior al principal
+        // Acción login
+        botonInicioSesion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuarioPuesto = correoField.getText();
+                String passwordStr = new String(contrasenaField.getPassword());
+
+                if (usuarioPuesto.equals("admin") && passwordStr.equals("admin123")) {
+                    vActual.setVisible(false);
+                    new Ventanagestion(vActual, clientes, productos);
+                } else {
+                    JOptionPane.showMessageDialog(vActual, "Usuario o contraseña incorrectos");
+                }
+            }
+        });
+
+        botonRegistrate.addActionListener(e -> {
+            dispose();
+            RegistroSesion reg = new RegistroSesion();
+            reg.setVisible(true);
+        });
+
         panelprincipal.add(panelBotones, gbc);
         add(panelprincipal);
 
         setVisible(true);
-    }
-
-    // Método main para ejecutar la ventana
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new IniciarSesion();
-        });
     }
 }
