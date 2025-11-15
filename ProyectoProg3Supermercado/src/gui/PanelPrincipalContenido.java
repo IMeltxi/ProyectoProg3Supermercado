@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -18,21 +21,28 @@ public class PanelPrincipalContenido extends JPanel {
 
         // prototipo
         for (int i = 1; i <= 12; i++) {
-            add(crearPanelProducto("Producto " + i, (double) (Math.random() * 10 + 1)));
+            add(crearPanelProducto("Producto " + i, (double) (Math.random() * 10 + 1),i));
         }
     }
 
-    private JPanel crearPanelProducto(String nombre, double precio) {
-        JPanel panelProducto = new JPanel();
-        panelProducto.setLayout(new BorderLayout());
-        panelProducto.setBackground(Color.WHITE);
-        panelProducto.setBorder(new LineBorder(new Color(0x013ADF), 2, true));
+        private JPanel crearPanelProducto(String nombre, double precio, int j) {
+            JPanel panelProducto = new JPanel(new BorderLayout());
+            panelProducto.setBackground(Color.WHITE);
+            panelProducto.setBorder(new LineBorder(new Color(0x013ADF), 2, true));
 
-        
-        JLabel lblImagen = new JLabel();
-        lblImagen.setHorizontalAlignment(JLabel.CENTER);
-        lblImagen.setIcon(new ImageIcon(new ImageIcon("fotos_png/producto.png")
-                .getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+            JLabel lblImagen = new JLabel();
+            lblImagen.setHorizontalAlignment(JLabel.CENTER);
+
+            String path = "fotos_png/Producto" + j + ".png";
+            ImageIcon icon;
+            File f = new File(path);
+            if (f.exists()) {
+                icon = new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+            } else {
+                BufferedImage placeholder = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+                icon = new ImageIcon(placeholder);
+            }
+            lblImagen.setIcon(icon);
 
        
         JLabel lblNombre = new JLabel(nombre, JLabel.CENTER);

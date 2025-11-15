@@ -37,11 +37,7 @@ public class VentanaCargando extends JFrame{
 		int espacioEntrePaneles = 200;
 		pCentro.setBorder(new EmptyBorder(espacioEntrePaneles,espacioEntrePaneles,espacioEntrePaneles,espacioEntrePaneles));
 		
-		
-		
-		
-		
-		
+			
 		bCargando = new JProgressBar(0,100);
 		bCargando.setStringPainted(true);
 		bCargando.setForeground(new Color(0,0,0));
