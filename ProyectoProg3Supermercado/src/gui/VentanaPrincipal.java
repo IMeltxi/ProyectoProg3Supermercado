@@ -23,6 +23,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel panelNorte = new JPanel();
         panelNorte.setPreferredSize(new Dimension(this.getWidth(), 75));
       	panelNorte.setLayout(new BorderLayout());
+      	this.add(panelNorte, BorderLayout.NORTH);
       		
    		//Creacion del panel central
    		JPanel pCentral = new JPanel();
@@ -86,6 +87,7 @@ public class VentanaPrincipal extends JFrame {
    	    	pCentral.removeAll();
    	    	//PanelPrincipalContenido panelPrincipal = new PanelPrincipalContenido();
    			//pCentral.add(panelPrincipal);
+   	    	pCentral.add(new VentanaCarrito());
    			pCentral.revalidate();
    		    pCentral.repaint();
     		   
@@ -97,9 +99,10 @@ public class VentanaPrincipal extends JFrame {
     	menu.add(botonMiLista);
     		
     	botonMiLista.addActionListener(e -> {
-    		pCentral.removeAll();
+    			pCentral.removeAll();
     		//PanelMiLista pMiLista = new PanelMiLista(perfil);
     		//pCentral.add(pMiLista);
+    			pCentral.add(new VentanaCarrito(), BorderLayout.CENTER);
     			pCentral.revalidate();
     		    pCentral.repaint();
     		});
