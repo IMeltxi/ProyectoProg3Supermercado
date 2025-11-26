@@ -1,5 +1,5 @@
 package domain;
-
+import db.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +7,9 @@ import gui.IniciarSesion;
 
 public class Main {
     public static void main(String[] args) {
+    	
+    	BD.conectar();
+    	
         // --- Productos ---
         List<Productos> productos = new ArrayList<>();
         productos.add(new Productos("Laptop", "Portátil Gaming", 1200.50f, 10));
