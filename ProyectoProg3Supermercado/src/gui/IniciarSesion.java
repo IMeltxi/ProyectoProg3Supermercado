@@ -19,9 +19,8 @@ public class IniciarSesion extends JFrame {
     private List<Cliente> clientes;
     private List<Productos> productos;
 
-    public IniciarSesion(List<Cliente> clientes, List<Productos> productos) {
-        this.clientes = clientes;
-        this.productos = productos;
+    public IniciarSesion() {
+        
 
         JFrame vActual = this;
 

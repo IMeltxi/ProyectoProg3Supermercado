@@ -11,16 +11,20 @@ public class Main {
     	BD.conectar();
     	
         // --- Productos ---
+    	/*
         List<Productos> productos = new ArrayList<>();
         productos.add(new Productos("Laptop", "Portátil Gaming", 1200.50f, 10));
         productos.add(new Productos("Smartphone", "Teléfono Android", 350.99f, 25));
         productos.add(new Productos("Auriculares", "Bluetooth Noise Cancelling", 89.99f, 50));
         productos.add(new Productos("Teclado", "Mechanical RGB", 69.50f, 30));
+        
         int idProd = 1;
         for (Productos p : productos) {
             p.setId(idProd++);
         }
-
+		*/
+    	
+    	
         // --- Clientes ---
         List<Cliente> clientes = new ArrayList<>();
         clientes.add(new Cliente(Cliente.tipoCliente.PREMIUM, 1, "Juan", "Pérez", "1990-05-12", "juan@mail.com", "1234", 500));
@@ -30,7 +34,8 @@ public class Main {
 
         // --- Abrir ventana de login y pasar los datos ---
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new IniciarSesion(clientes, productos);
+            //new IniciarSesion(clientes, productos);
+        	new IniciarSesion();
         });
     }
 }

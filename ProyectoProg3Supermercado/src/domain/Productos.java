@@ -10,13 +10,13 @@ public class Productos {
 	public Productos() {	
 	}
 	
-	public Productos(String nombre, String descripcion, float precio, int stock) {
+	public Productos(String nombre, String descripcion, float precio, int stock, int id) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.stock = stock;
-		this.id = 0;
+		this.id = id;
 	}
 
 	public String getNombre() {

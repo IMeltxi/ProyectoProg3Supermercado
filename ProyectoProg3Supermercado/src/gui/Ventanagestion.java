@@ -20,6 +20,7 @@ public class Ventanagestion extends JFrame {
     private List<Cliente> clientes;
     private List<Productos> productos;
     private Clientediplay cleintedisplay;
+    private Productodisplay pDisplay;
 
     private static final long serialVersionUID = 1L;
 
@@ -57,6 +58,10 @@ public class Ventanagestion extends JFrame {
         //añadir clientes
         cleintedisplay = new Clientediplay();
         cliente.add(cleintedisplay, BorderLayout.CENTER);
+        
+        //añadir productos
+        pDisplay = new Productodisplay();
+        p_s.add(pDisplay, BorderLayout.CENTER);
 
         // --- Menú ---
         JMenuBar menu = new JMenuBar();
@@ -82,13 +87,13 @@ public class Ventanagestion extends JFrame {
         });
 
         cerrar_sesion.addActionListener(e -> {
-            new IniciarSesion(clientes,productos);
+            new IniciarSesion();
             dispose();
         });
 
-        // --- Cargar tablas ---
+        // --- Cargar tablas --- sin base de datos
         //cargarTablaUsuarios();
-        cargarTablaProductos();
+        //cargarTablaProductos();
 
         setVisible(true);
     }

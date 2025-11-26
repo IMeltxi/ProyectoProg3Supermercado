@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.DocFlavor.STRING;
+
 import domain.Cliente;
 import domain.Productos;
 
@@ -109,6 +111,44 @@ public class BD {
 
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, idCliente);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static ArrayList<Productos> obtenerProductos() {
+    	
+    	ArrayList<Productos> productos = new ArrayList<Productos>();
+    	
+    	String sql ="SELECT * FROM PRODUCTO";
+    	
+    	try (PreparedStatement stmt = con.prepareStatement(sql);
+    			ResultSet rs = stmt.executeQuery()){
+    		while (rs.next()) {
+    			Integer id = rs.getInt("ID_PRODUCTO");
+    			String nombre = rs.getString("NOMBRE");
+    			Float precio = rs.getFloat("PRECIO");
+    			Integer stock = rs.getInt("STOCK");
+    			String descripcion = rs.getString("DESCRIPCION");
+    			
+    			Productos nuevop = new Productos(nombre,descripcion,precio,stock,id);
+    			
+    			productos.add(nuevop);
+    			
+    		}
+    		
+    	}   catch (SQLException e) {
+			e.printStackTrace();
+    	}
+    	return productos;
+    }
+    
+    public static void EliminarProducto(int idproducto) {
+        String sql = "DELETE FROM PRODUCTO WHERE ID_PRODUCTO = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idproducto);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
