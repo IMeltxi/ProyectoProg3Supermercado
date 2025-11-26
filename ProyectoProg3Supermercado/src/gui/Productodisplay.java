@@ -253,7 +253,7 @@ public class Productodisplay extends JPanel {
             tablaModelo.addRow(fila);
         }
         
-        
+  
     }
 
 }
