@@ -138,7 +138,7 @@ public class VentanaPrincipal extends JFrame {
     	cerrar_sesion.addActionListener(e -> {
     		setVisible(false);
     		// Asumiendo que IniciarSesion recibe listas, pasamos listas vacías o null según tu implementación
-    		new IniciarSesion(new ArrayList<>(), new ArrayList<>()); 
+    		new IniciarSesion(); 
     	});
     	
     	setJMenuBar(menubar);
