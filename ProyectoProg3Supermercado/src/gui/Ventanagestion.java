@@ -19,6 +19,7 @@ public class Ventanagestion extends JFrame {
 
     private List<Cliente> clientes;
     private List<Productos> productos;
+    private Clientediplay cleintedisplay;
 
     private static final long serialVersionUID = 1L;
 
@@ -37,10 +38,10 @@ public class Ventanagestion extends JFrame {
         JTabbedPane tabbed = new JTabbedPane();
 
         // Panel de usuarios
-        JPanel usuarios = new JPanel(new BorderLayout());
+        JPanel cliente = new JPanel(new BorderLayout());
         tableUsuarios = new JTable();
         JScrollPane scrollUsuarios = new JScrollPane(tableUsuarios);
-        usuarios.add(scrollUsuarios, BorderLayout.CENTER);
+        cliente.add(scrollUsuarios, BorderLayout.CENTER);
 
         // Panel de productos
         JPanel p_s = new JPanel(new BorderLayout());
@@ -48,10 +49,14 @@ public class Ventanagestion extends JFrame {
         JScrollPane scrollProductos = new JScrollPane(tableProductos);
         p_s.add(scrollProductos, BorderLayout.CENTER);
 
-        tabbed.add(usuarios, "Usuarios");
+        tabbed.add(cliente, "Clientes");
         tabbed.add(p_s, "Productos");
 
         add(tabbed, BorderLayout.CENTER);
+        
+        //añadir clientes
+        cleintedisplay = new Clientediplay();
+        cliente.add(cleintedisplay, BorderLayout.CENTER);
 
         // --- Menú ---
         JMenuBar menu = new JMenuBar();
@@ -82,7 +87,7 @@ public class Ventanagestion extends JFrame {
         });
 
         // --- Cargar tablas ---
-        cargarTablaUsuarios();
+        //cargarTablaUsuarios();
         cargarTablaProductos();
 
         setVisible(true);

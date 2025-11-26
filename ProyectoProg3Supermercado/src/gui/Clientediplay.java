@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 import db.BD;
 import domain.Cliente;
+import io.*;
 
 public class Clientediplay extends JPanel {
 
@@ -30,7 +31,7 @@ public class Clientediplay extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String[] headers = { "TIPO CLIENTE","Contraseña","Nombre", "Apellido","Correo","FECHA NACIMIENTO","PUNTOS" };
+	private String[] headers = { "ID","TIPO CLIENTE","Nombre", "Apellido","Correo","FECHA NACIMIENTO","CONTRASEÑA","PUNTOS" };
     private JTable tabla;
     private DefaultTableModel tablaModelo;
     private Button Eliminar, Editar;
@@ -46,8 +47,8 @@ public class Clientediplay extends JPanel {
         add(pCentro, BorderLayout.CENTER);
         add(pSur, BorderLayout.SOUTH);
 
-        // Obtener lista de usuarios desde la base de datos
-       ArrayList<Cliente> listaUsuariosBD = BD.obtenerUsuarios();
+        // Obtener lista de clientes desde la base de datos
+       ArrayList<Cliente> listaUsuariosBD = BD.obtenerCliente();
 
         DefaultListModel<Cliente> modeloUsuarios = new DefaultListModel<>();
         for (Cliente cliente : listaUsuariosBD) {
@@ -55,7 +56,7 @@ public class Clientediplay extends JPanel {
         }
         JList<Cliente> listausuarios = new JList<>(modeloUsuarios);
         listausuarios.setFixedCellWidth(200);
-        listausuarios.setCellRenderer(new RendererUdisplay());
+        listausuarios.setCellRenderer(new RendererCdisplay());
          
         // Scroll para el JList
         JScrollPane scroll = new JScrollPane(listausuarios);
@@ -170,31 +171,36 @@ public class Clientediplay extends JPanel {
                 int filaSeleccionada = tabla.getSelectedRow();
 
                 if (filaSeleccionada >= 0) {
-                    // Obtener el ID del usuario seleccionado
-                    String NombreUsuario = (String) tabla.getValueAt(filaSeleccionada, 0);             
+
                     
-                    Usuario usuarioeliminar = new Usuario(NombreUsuario, null, null, null, null, null, null);
-                    
-                    // Confirmar
-                    int confirmacion = JOptionPane.showConfirmDialog(null, 
-                            "¿Está seguro de que desea eliminar este usuario?", 
-                            "Confirmar Eliminación", 
-                            JOptionPane.YES_NO_OPTION);
+                    int idCliente = (int) tabla.getValueAt(filaSeleccionada, 0);
+
+                    int confirmacion = JOptionPane.showConfirmDialog(
+                            null,
+                            "¿Está seguro de que desea eliminar este cliente?",
+                            "Confirmar Eliminación",
+                            JOptionPane.YES_NO_OPTION
+                    );
 
                     if (confirmacion == JOptionPane.YES_OPTION) {
-                        // Llamar al método delete con el objeto Usuario
-						BD.EliminarUsuario(usuarioeliminar);
-						
 
-						// Eliminar la fila del modelo de la tabla
-						((DefaultTableModel) tabla.getModel()).removeRow(filaSeleccionada);
-						JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente.");
+                        // Llamar al método de la BD
+                        BD.EliminarUsuario(idCliente);
+
+                       
+                        ((DefaultTableModel) tabla.getModel()).removeRow(filaSeleccionada);
+
+                        JOptionPane.showMessageDialog(null, "Cliente eliminado correctamente.");
                     }
+
                 } else {
-                    JOptionPane.showMessageDialog(null, "Debe seleccionar un usuario para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar un cliente para eliminar.",
+                            "Advertencia",
+                            JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
+
 	    
         revalidate();
         repaint();
@@ -206,19 +212,20 @@ public class Clientediplay extends JPanel {
         // Limpiar la tabla antes de agregar los datos
         tablaModelo.setRowCount(0);
 
-        // Obtener lista de usuarios desde la base de datos
-        ArrayList<Usuario> usuarios = BD.obtenerUsuarios();
+        // Obtener lista de clientes desde la base de datos
+        ArrayList<Cliente> clientes = BD.obtenerCliente();
 
         // Agregar los usuarios al modelo de la tabla
-        for (Usuario usuario : usuarios) {
+        for (Cliente cliente : clientes) {
             Object[] fila = {
-                usuario.getNombreUsuario(),
-                usuario.getContrasenia(),
-                usuario.getNombre(),
-                usuario.getApellido(),  
-                usuario.getCorreo(),
-                usuario.getTelefono(),
-                usuario.getPlan()
+            		cliente.getidCliente(), 
+            	cliente.getTipoCliente(),
+            	cliente.getNombre(),
+            	cliente.getContrasena(),                      
+                cliente.getApellido(),                
+                cliente.getEmail(),
+                cliente.getFechNac(),
+                cliente.getPuntos()
                 
             };
             tablaModelo.addRow(fila);

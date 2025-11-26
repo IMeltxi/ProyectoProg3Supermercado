@@ -21,7 +21,7 @@ public class BD {
     	
         try {
         	Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection("jdbc:sqlite:BaseDeDatos/supermercado.db");
+            con = DriverManager.getConnection("jdbc:sqlite:BaseDeDatos/supermecado.db");
             System.out.println("Conexión establecida.");
             
         } catch (SQLException | ClassNotFoundException e) {
@@ -59,7 +59,7 @@ public class BD {
                 String apellido = rs.getString("APELLIDO");
                 String fechaNac = rs.getString("FECHANA");
                 String correo = rs.getString("EMAIL");
-                String contrasenia = rs.getString("CONTRASENYA");
+                String contrasenia = rs.getString("CONTRASEYA");
                 int puntos = rs.getInt("PUNTOS");
 
                 Cliente cliente = new Cliente(tipo, id, nombre, apellido, fechaNac, correo, contrasenia, puntos);
@@ -102,6 +102,19 @@ public class BD {
 
         return carrito;
     }
+    
+    
+    public static void EliminarUsuario(int idCliente) {
+        String sql = "DELETE FROM CLIENTE WHERE ID_CLIENTE = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     
