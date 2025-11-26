@@ -2,171 +2,148 @@ package gui;
 
 import java.awt.*;
 import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 public class VentanaPrincipal extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    
+    // Referencias para mantener el estado de las vistas
+    private VentanaCarrito ventanaCarrito;
+    private PanelPrincipalContenido panelProductos;
+    private JPanel pCentral;
 
     public VentanaPrincipal() {
-        setTitle("Supermercado OLE");
+        // Título de la ventana del sistema operativo
+        setTitle("MercaDeusto");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         
-        
-        
-        //CREACION PANEL NORTE
+        // 1. INSTANCIAMOS EL CARRITO Y LOS PRODUCTOS UNA SOLA VEZ
+        ventanaCarrito = new VentanaCarrito(); 
+        panelProductos = new PanelPrincipalContenido(ventanaCarrito); // Le pasamos el carrito
+
+        // --- CREACION PANEL NORTE ---
         JPanel panelNorte = new JPanel();
-        panelNorte.setPreferredSize(new Dimension(this.getWidth(), 75));
+        // Aumentamos un poco la altura para que quepa bien el título grande
+        panelNorte.setPreferredSize(new Dimension(this.getWidth(), 85)); 
       	panelNorte.setLayout(new BorderLayout());
       	this.add(panelNorte, BorderLayout.NORTH);
       		
-   		//Creacion del panel central
-   		JPanel pCentral = new JPanel();
+   		// --- CREACION PANEL CENTRAL ---
+   		pCentral = new JPanel();
    		pCentral.setLayout(new BorderLayout());  
    		this.add(pCentral, BorderLayout.CENTER);
-      		
-      	//BUSCADOR Y FILTRADO (PANEL_NORTE_DERECHA)	
-   		JPanel panelNorteDerecha = new JPanel();
-   		panelNorteDerecha.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
-   		panelNorteDerecha.setBackground(new Color(0x013ADF));
-      		
-      	//BUSCADOR
-     	JTextField buscador = new JTextField();
-      	buscador.setPreferredSize(new Dimension(300, 40));
-      	buscador.setBorder(new LineBorder(Color.BLACK, 2));
-      	buscador.setHorizontalAlignment(JTextField.CENTER);
-      	panelNorteDerecha.add(buscador);
-      		
-      	JButton botonBuscar = new JButton("BUSCAR");
-      	panelNorteDerecha.add(botonBuscar);
-      	botonBuscar.addActionListener(e ->{
-      		String textoBuscar = buscador.getText();
-      		pCentral.removeAll();
-     		//PanelBuscar pBuscar = new PanelBuscar(perfil, textoBuscar);
-     		//pCentral.add(pBuscar);
-     		pCentral.revalidate();
-      	    pCentral.repaint();
-      		});
+   		
+   		// Por defecto cargamos los productos
+   		pCentral.add(panelProductos, BorderLayout.CENTER);
 
-      	//ICONO Mercadeusto (PANEL_NORTE_CENTRO)
+
     	JPanel panelNorteCentro = new JPanel();
-    	panelNorteCentro.setBackground(Color.white);
+    	panelNorteCentro.setBackground(new Color(0x013ADF));
+        // FlowLayout para poner logo y texto uno al lado del otro
+    	panelNorteCentro.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
     	
-    		
-    	JLabel lblTitulo = new JLabel("MercaDeusto");
-    	     lblTitulo.setFont(new Font("Comic Sans MS", Font.BOLD, 50));
+    	// 1. El Logo (Mantenido)
+    	ImageIcon iconoTitulo = new ImageIcon("fotos_png/Logo_MercaDeusto.png");
+    	Image imagenEscaladaTitulo = iconoTitulo.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH); 
+    	ImageIcon iconoRedimensionadoTitulo = new ImageIcon(imagenEscaladaTitulo);
+    	JLabel labelLogo = new JLabel(iconoRedimensionadoTitulo);
+    	
+    	// 2. El Título Grande (NUEVO)
+    	JLabel labelTituloGrande = new JLabel("MercaDeusto");
+    	labelTituloGrande.setFont(new Font("SansSerif", Font.BOLD, 40)); // Fuente grande
+    	labelTituloGrande.setForeground(Color.WHITE); // Texto blanco
+    	
+    	// Añadimos ambos al panel central
+    	panelNorteCentro.add(labelLogo);
+    	panelNorteCentro.add(labelTituloGrande);
     			
-    	panelNorteCentro.add(lblTitulo);
-    			
     		
-    		
-   		//BOTONES INICIO, MI LISTA, (PANEL_NORTE_IZQUIERDA)
+   		// --- BOTONES INICIO, MI LISTA (IZQUIERDA) ---
    		JPanel panelNorteIzquierda = new JPanel();
    		panelNorteIzquierda.setBackground(new Color(0x013ADF));
-   		
    		panelNorteIzquierda.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
     		
-   		//BOTONES DE LA BARRA NORTE IZQ
-   		ArrayList<JButton> menu = new ArrayList<JButton>();
-    		
+    	// Botón Inicio
     	ImageIcon iconoInicio = new ImageIcon("fotos_png/Inicio.png");
-    	Image imagenEscaladaInicio = iconoInicio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Ajustar dimensiones (150x50 como ejemplo)
+    	Image imagenEscaladaInicio = iconoInicio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); 
     	ImageIcon iconoRedimensionado = new ImageIcon(imagenEscaladaInicio);
     		
     	JButton botonInicio = new JButton(iconoRedimensionado);
     	botonInicio.setBackground(Color.WHITE);
     	botonInicio.setBorder(new LineBorder(Color.black, 2));
-        panelNorteIzquierda.add(botonInicio);
-    	
-       botonInicio.addActionListener(e -> {
-   	    	pCentral.removeAll();
-   	    	//PanelPrincipalContenido panelPrincipal = new PanelPrincipalContenido();
-   			//pCentral.add(panelPrincipal);
-   	    	pCentral.add(new VentanaCarrito());
-   			pCentral.revalidate();
-   		    pCentral.repaint();
-    		   
-    		});
-    	    
-    		
-    		
-    	JButton botonMiLista = new JButton("Mi Lista");
-    	menu.add(botonMiLista);
-    		
-    	botonMiLista.addActionListener(e -> {
-    			pCentral.removeAll();
-    		//PanelMiLista pMiLista = new PanelMiLista(perfil);
-    		//pCentral.add(pMiLista);
-    			pCentral.add(new VentanaCarrito(), BorderLayout.CENTER);
-    			pCentral.revalidate();
-    		    pCentral.repaint();
-    		});
-    		
-    	    for (JButton boton : menu) {
-    	    
-    	    	boton.setBackground(Color.BLUE);
-    	    	boton.setForeground(Color.WHITE);
-    	    	boton.setFont(new Font("SANS_SERIF", Font.BOLD, 20));
-    	    	boton.setBorder(new LineBorder(Color.black, 2));
-    	        panelNorteIzquierda.add(boton);
-    	    }
-    		
-    		//AÑADIR LOS 3 PANELES AL PANEL PRINCIPAL NORTE
-    		panelNorte.add(panelNorteDerecha, BorderLayout.EAST);
-    		panelNorte.add(panelNorteCentro, BorderLayout.CENTER);
-    		panelNorte.add(panelNorteIzquierda, BorderLayout.WEST);
-    			
-    		//PANEL SUR (LABEL QUE PONE Mercadeusto)
-    		JPanel panelSur = new JPanel();
-    		panelSur.setBackground(new Color(0x013ADF));
-    		
-    		JLabel Mercadeusto = new JLabel("MercaDeusto");
-    		Mercadeusto.setBackground(new Color(0x013ADF));
-    		Mercadeusto.setForeground(Color.WHITE);
-    		Mercadeusto.setFont(new Font("SANS_SERIF", Font.BOLD, 16));
-    	      
-    		panelSur.add(Mercadeusto, BorderLayout.CENTER);
-    		
-    		//AÑADIR LOS PANELES PRINCIPALES A LOS BORDERLAYOUTS
-    		this.add(panelNorte, BorderLayout.NORTH);	
-    		this.add(panelSur, BorderLayout.SOUTH);	
-    		
-    		PanelPrincipalContenido panelPrincipal = new PanelPrincipalContenido();
-    		pCentral.add(panelPrincipal);
-    		
-    		//menu bar
-    		
-    		JMenuBar menubar = new JMenuBar();
-    		JMenu opciones = new JMenu("Opciones");
-    		opciones.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
-    		menubar.add(opciones);
-    		
-    		
-    		JMenuItem Salir = new JMenuItem("Salir");
-    		opciones.addSeparator();
-    		opciones.add(Salir);
-    		
-    		JMenuItem cerrar_sesion = new JMenuItem("Cerrar sesión");
-    		opciones.add(cerrar_sesion);
-    		
-    		JMenuItem CompraAleatoria = new JMenuItem("CompraAleatoria");
-    		opciones.add(CompraAleatoria);
-    		
-    		setJMenuBar(menubar);
-    		
-    	
-    		
-    		
-    	
-    		setLocationRelativeTo(null);
-    			
         
+        // Lógica botón Inicio: Mostrar panel de productos guardado
+        botonInicio.addActionListener(e -> {
+            pCentral.removeAll();
+            pCentral.add(panelProductos, BorderLayout.CENTER);
+            pCentral.revalidate();
+            pCentral.repaint();
+   		});
+        
+        panelNorteIzquierda.add(botonInicio);
 
+    	// Botón Mi Lista
+    	JButton botonMiLista = new JButton("Mi Lista");
+        botonMiLista.setBackground(Color.BLUE);
+        botonMiLista.setForeground(Color.WHITE);
+        botonMiLista.setFont(new Font("SANS_SERIF", Font.BOLD, 20));
+        botonMiLista.setBorder(new LineBorder(Color.black, 2));
+        
+    	// Lógica botón Mi Lista: Mostrar el carrito guardado
+    	botonMiLista.addActionListener(e -> {
+    		pCentral.removeAll();
+    		pCentral.add(ventanaCarrito, BorderLayout.CENTER);
+    		pCentral.revalidate();
+    		pCentral.repaint();
+    	});
+        
+        panelNorteIzquierda.add(botonMiLista);
+    		
+    	// Añadir paneles al Norte
+    	panelNorte.add(panelNorteCentro, BorderLayout.CENTER);
+    	panelNorte.add(panelNorteIzquierda, BorderLayout.WEST);
+    			
+    	// --- PANEL SUR ---
+    	JPanel panelSur = new JPanel();
+    	panelSur.setBackground(new Color(0x013ADF));
+    	JLabel lblFooter = new JLabel("MercaDeusto");
+        lblFooter.setBackground(new Color(0x013ADF));
+        lblFooter.setForeground(Color.WHITE);
+        lblFooter.setFont(new Font("SANS_SERIF", Font.BOLD, 16));
+    	panelSur.add(lblFooter, BorderLayout.CENTER);
+    		
+    	this.add(panelNorte, BorderLayout.NORTH);	
+    	this.add(panelSur, BorderLayout.SOUTH);	
+    	
+    	// --- MENU SUPERIOR ---
+    	JMenuBar menubar = new JMenuBar();
+    	JMenu opciones = new JMenu("Opciones");
+    	opciones.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+    	menubar.add(opciones);
+    	
+    	JMenuItem Salir = new JMenuItem("Salir");
+    	opciones.addSeparator();
+    	opciones.add(Salir);
+    	
+    	JMenuItem cerrar_sesion = new JMenuItem("Cerrar sesión");
+    	opciones.add(cerrar_sesion);
+    	
+    	Salir.addActionListener(e -> System.exit(0));
+    	
+    	cerrar_sesion.addActionListener(e -> {
+    		setVisible(false);
+    		// Asumiendo que IniciarSesion recibe listas, pasamos listas vacías o null según tu implementación
+    		new IniciarSesion(new ArrayList<>(), new ArrayList<>()); 
+    	});
+    	
+    	setJMenuBar(menubar);
+    		
+    	setLocationRelativeTo(null);
         setVisible(true);
     }
 
