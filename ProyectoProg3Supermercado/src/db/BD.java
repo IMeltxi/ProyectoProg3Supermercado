@@ -57,7 +57,6 @@ public class BD {
             while (rs.next()) {
                 int id = rs.getInt("ID_CLIENTE"); 
                 
-                // Conversión de ENUM segura
                 String tipoStr = rs.getString("TIPO");
                 Cliente.tipoCliente tipo = Cliente.tipoCliente.NORMAL; 
                 if(tipoStr != null) {
@@ -73,11 +72,10 @@ public class BD {
                 String email = rs.getString("EMAIL");
                 String fechaStr = rs.getString("FECHANA"); 
                 
-                // Validación: Si viene nulo o vacío
+                // Validación: Si viene nulo o vacío (Me he ayudado de ChatGPT para estas 8 líneas)
                 if (fechaStr == null || fechaStr.trim().isEmpty()) {
                     fechaStr = "2000-01-01"; 
                 } 
-                // Validación EXTRA: Si por casualidad es un numero (timestamp antiguo), lo convertimos
                 else if (fechaStr.matches("\\d+")) { 
                     try {
                         long millis = Long.parseLong(fechaStr);
@@ -86,8 +84,6 @@ public class BD {
                         fechaStr = "2000-01-01"; // Si falla, fecha por defecto
                     }
                 }
-                // Si ya viene como "2005-06-04", lo dejamos tal cual.
-                // --------------------------------------
 
                 String contrasena = rs.getString("CONTRASEYA");
                 int puntos = rs.getInt("PUNTOS");
