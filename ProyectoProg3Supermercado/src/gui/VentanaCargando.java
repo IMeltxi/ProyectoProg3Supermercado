@@ -84,8 +84,8 @@ public class VentanaCargando extends JFrame{
 					}
 				);
 				vActual.setVisible(false);
-				VentanaPrincipal ventanaPrincipal= new VentanaPrincipal();
-				ventanaPrincipal.setVisible(true);
+				IniciarSesion iniciarSesion= new IniciarSesion();
+				iniciarSesion.setVisible(true);
 			}
         	
         });hilo.start();

@@ -3,7 +3,7 @@ import db.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.IniciarSesion;
+import gui.VentanaCargando;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,7 +35,7 @@ public class Main {
         // --- Abrir ventana de login y pasar los datos ---
         javax.swing.SwingUtilities.invokeLater(() -> {
             //new IniciarSesion(clientes, productos);
-        	new IniciarSesion();
+        	new VentanaCargando();
         });
     }
 }

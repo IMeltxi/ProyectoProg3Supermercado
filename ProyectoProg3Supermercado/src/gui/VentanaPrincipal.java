@@ -24,7 +24,7 @@ public class VentanaPrincipal extends JFrame {
         
         // 1. INSTANCIAMOS EL CARRITO Y LOS PRODUCTOS UNA SOLA VEZ
         ventanaCarrito = new VentanaCarrito(); 
-        panelProductos = new PanelPrincipalContenido(ventanaCarrito); // Le pasamos el carrito
+        panelProductos = new PanelPrincipalContenido(ventanaCarrito); 
 
         // --- CREACION PANEL NORTE ---
         JPanel panelNorte = new JPanel();

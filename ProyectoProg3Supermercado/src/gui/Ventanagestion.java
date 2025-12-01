@@ -9,7 +9,6 @@ import domain.Cliente;
 import domain.Productos;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
 public class Ventanagestion extends JFrame {

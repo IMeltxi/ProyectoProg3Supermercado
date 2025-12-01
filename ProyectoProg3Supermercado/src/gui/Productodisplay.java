@@ -5,16 +5,24 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 import db.BD;
@@ -122,10 +130,7 @@ public class Productodisplay extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				//setVisible(false);
-				
-				//new Nuevo_productodisplay();
+				mostrarDialogoProducto(null);
 		
 			}
 
@@ -225,6 +230,31 @@ public class Productodisplay extends JPanel {
 
         });
         
+        Editar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int r = tabla.getSelectedRow();
+                if (r >= 0) {
+                    try {
+                        // Recuperamos datos de la tabla para rellenar la ventana
+                        int id = (int) tabla.getValueAt(r, 0);
+                        String nom = tabla.getValueAt(r, 1).toString();
+                        float prec = Float.parseFloat(tabla.getValueAt(r, 2).toString());
+                        int stock = (int) tabla.getValueAt(r, 3);
+                        String desc = tabla.getValueAt(r, 4).toString();
+
+                        // Creamos objeto temporal
+                        Productos p = new Productos(nom, desc, prec, stock, id);
+                        mostrarDialogoProducto(p);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error leyendo fila.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecciona un producto.");
+                }
+            }
+        });
+        
         revalidate();
         repaint();
         setVisible(true);
@@ -252,8 +282,52 @@ public class Productodisplay extends JPanel {
             };
             tablaModelo.addRow(fila);
         }
-        
-  
     }
+
+    private void mostrarDialogoProducto(Productos p) {
+        JDialog d = new JDialog((JFrame)null, "Gestión Producto", true);
+        d.setSize(350, 300);
+        d.setLocationRelativeTo(this);
+        d.setLayout(new GridLayout(5, 2));
+
+        JTextField tNom = new JTextField(p != null ? p.getNombre() : "");
+        JTextField tDesc = new JTextField(p != null ? p.getDescripcion() : "");
+        
+        JSpinner sPrec = new JSpinner(new SpinnerNumberModel(p != null ? p.getPrecio() : 0.0, 0.0, 10000.0, 0.5));
+        JSpinner sStock = new JSpinner(new SpinnerNumberModel(p != null ? p.getStock() : 0, 0, 1000, 1));
+
+        d.add(new JLabel("Nombre:")); d.add(tNom);
+        d.add(new JLabel("Precio:")); d.add(sPrec);
+        d.add(new JLabel("Stock:")); d.add(sStock);
+        d.add(new JLabel("Descripción:")); d.add(tDesc);
+
+        JButton btnSave = new JButton("Guardar");
+        btnSave.addActionListener(ev -> {
+            try {
+                String n = tNom.getText();
+                String de = tDesc.getText();
+                float pr = ((Number)sPrec.getValue()).floatValue();
+                int st = (int)sStock.getValue();
+
+                if (p == null) {
+                    Productos nuevo = new Productos(n, de, pr, st, 0);
+                    BD.insertarProducto(nuevo);
+                } else {
+                    p.setNombre(n); p.setDescripcion(de);
+                    p.setPrecio(pr); p.setStock(st);
+                    BD.actualizarProducto(p);
+                }
+                cargarDatosEnTabla(); // Refrescar tabla
+                d.dispose(); // Cerrar ventana
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(d, "Error en datos: " + ex.getMessage());
+            }
+        });
+
+        d.add(new JLabel(""));
+        d.add(btnSave);
+        d.setVisible(true);
+    }
+    
 
 }
