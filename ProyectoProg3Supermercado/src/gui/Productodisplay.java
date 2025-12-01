@@ -162,32 +162,34 @@ public class Productodisplay extends JPanel {
         
        
         Editar.addActionListener(new ActionListener() {
-			
-        	boolean editable = false;
-        	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				editable = !editable; 
-				
-				tablaModelo = new DefaultTableModel(headers, 0) {
-		            /**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int fila = tabla.getSelectedRow();
+                if (fila >= 0) {
+                    try {
+                        // Recuperar datos respetando el orden de headers
+                        int id = (int) tabla.getValueAt(fila, 0);
+                        String nombre = tabla.getValueAt(fila, 1).toString();
+                        
+                        // Parseo seguro de números (por si vienen como String o Number)
+                        float precio = Float.parseFloat(tabla.getValueAt(fila, 2).toString());
+                        int stock = Integer.parseInt(tabla.getValueAt(fila, 3).toString());
+                        
+                        String descripcion = tabla.getValueAt(fila, 4).toString();
 
-					@Override
-		            public boolean isCellEditable(int row, int column) {
-		                return editable; // 
-		            }
-		        };
-		        cargarDatosEnTabla(); // Refrescar datos con la nueva configuración
-		        tabla.setModel(tablaModelo);
-		        
-		        
-			}
-			});
+                        // Crear objeto temporal
+                        Productos p = new Productos(nombre, descripcion, precio, stock, id);
+                        
+                        mostrarDialogoProducto(p);
+                        
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error al leer datos: " + ex.getMessage());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecciona un producto para editar.");
+                }
+            }
+        });
         
         Eliminar.addActionListener(new ActionListener() {
 

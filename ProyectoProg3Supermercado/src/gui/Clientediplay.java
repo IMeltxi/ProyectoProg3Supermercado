@@ -236,15 +236,14 @@ public class Clientediplay extends JPanel {
         // Agregar los usuarios al modelo de la tabla
         for (Cliente cliente : clientes) {
             Object[] fila = {
-            		cliente.getidCliente(), 
+            	cliente.getidCliente(), 
             	cliente.getTipoCliente(),
             	cliente.getNombre(),
-            	cliente.getContrasena(),                      
-                cliente.getApellido(),                
+            	cliente.getApellido(),  
                 cliente.getEmail(),
                 cliente.getFechNac(),
+            	cliente.getContrasena(),
                 cliente.getPuntos()
-                
             };
             tablaModelo.addRow(fila);
         }
