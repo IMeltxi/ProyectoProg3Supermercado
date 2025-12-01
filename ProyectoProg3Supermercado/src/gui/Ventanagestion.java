@@ -192,8 +192,7 @@ public class Ventanagestion extends JFrame {
         public Object getCellEditorValue() { return ""; }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             return button;
         }
     }
@@ -228,3 +227,29 @@ public class Ventanagestion extends JFrame {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

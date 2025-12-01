@@ -11,7 +11,6 @@ public class PanelPrincipalContenido extends JPanel {
     private static final long serialVersionUID = 1L;
     private VentanaCarrito carritoRef; // Referencia al carrito
 
-    // Constructor recibe la instancia del carrito
     public PanelPrincipalContenido(VentanaCarrito carrito) {
         this.carritoRef = carrito; 
         
@@ -20,7 +19,6 @@ public class PanelPrincipalContenido extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         for (int i = 1; i <= 12; i++) {
-            // Redondear el precio para que se vea bonito
             double precio = Math.round((Math.random() * 10 + 1) * 100.0) / 100.0;
             add(crearPanelProducto("Producto " + i, precio, i));
         }
@@ -31,7 +29,6 @@ public class PanelPrincipalContenido extends JPanel {
         panelProducto.setBackground(Color.WHITE);
         panelProducto.setBorder(new LineBorder(new Color(0x013ADF), 2, true));
 
-        // ... (Tu código de imagen se mantiene igual) ...
         JLabel lblImagen = new JLabel();
         lblImagen.setHorizontalAlignment(JLabel.CENTER);
         String path = "fotos_png/Producto" + j + ".png";
@@ -43,7 +40,7 @@ public class PanelPrincipalContenido extends JPanel {
             BufferedImage placeholder = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = placeholder.createGraphics();
             g2d.setColor(Color.LIGHT_GRAY);
-            g2d.fillRect(0,0,100,100); // Dibujar algo si no hay imagen
+            g2d.fillRect(0,0,100,100); 
             g2d.dispose();
             icon = new ImageIcon(placeholder);
         }
@@ -61,7 +58,7 @@ public class PanelPrincipalContenido extends JPanel {
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setFont(new Font("SansSerif", Font.BOLD, 14));
 
-        // --- LÓGICA DEL BOTÓN AÑADIR ---
+        // LÓGICA DEL BOTÓN AÑADIR 
         btnAdd.addActionListener(e -> {
             if (carritoRef != null) {
                 carritoRef.agregarProducto(nombre, precio);

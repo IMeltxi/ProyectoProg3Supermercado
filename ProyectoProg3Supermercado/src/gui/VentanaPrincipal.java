@@ -44,21 +44,19 @@ public class VentanaPrincipal extends JFrame {
 
     	JPanel panelNorteCentro = new JPanel();
     	panelNorteCentro.setBackground(new Color(0x013ADF));
-        // FlowLayout para poner logo y texto uno al lado del otro
     	panelNorteCentro.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
     	
-    	// 1. El Logo (Mantenido)
+    	// 1. El Logo
     	ImageIcon iconoTitulo = new ImageIcon("fotos_png/Logo_MercaDeusto.png");
     	Image imagenEscaladaTitulo = iconoTitulo.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH); 
     	ImageIcon iconoRedimensionadoTitulo = new ImageIcon(imagenEscaladaTitulo);
     	JLabel labelLogo = new JLabel(iconoRedimensionadoTitulo);
     	
-    	// 2. El Título Grande (NUEVO)
+    	// 2. El Título Grande
     	JLabel labelTituloGrande = new JLabel("MercaDeusto");
     	labelTituloGrande.setFont(new Font("SansSerif", Font.BOLD, 40)); // Fuente grande
     	labelTituloGrande.setForeground(Color.WHITE); // Texto blanco
     	
-    	// Añadimos ambos al panel central
     	panelNorteCentro.add(labelLogo);
     	panelNorteCentro.add(labelTituloGrande);
     			
@@ -72,7 +70,7 @@ public class VentanaPrincipal extends JFrame {
     	ImageIcon iconoInicio = new ImageIcon("fotos_png/Inicio.png");
     	Image imagenEscaladaInicio = iconoInicio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); 
     	ImageIcon iconoRedimensionado = new ImageIcon(imagenEscaladaInicio);
-    		
+    	
     	JButton botonInicio = new JButton(iconoRedimensionado);
     	botonInicio.setBackground(Color.WHITE);
     	botonInicio.setBorder(new LineBorder(Color.black, 2));
@@ -137,7 +135,6 @@ public class VentanaPrincipal extends JFrame {
     	
     	cerrar_sesion.addActionListener(e -> {
     		setVisible(false);
-    		// Asumiendo que IniciarSesion recibe listas, pasamos listas vacías o null según tu implementación
     		new IniciarSesion(); 
     	});
     	
