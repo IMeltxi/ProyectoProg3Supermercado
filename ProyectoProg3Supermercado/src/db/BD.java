@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -238,6 +239,83 @@ public class BD {
         }
     }
 
+    // --- MÉTODOS PARA HISTORIAL DE COMPRAS ---
+    
+    /**
+     * Inserta una nueva compra en la tabla COMPRA y devuelve el ID generado.
+     */
+    public static int insertarCompra(int idCliente, double total, String estado) {
+        int idCompra = -1;
+        String sql = "INSERT INTO COMPRA (ID_CLIENTE, TOTAL, ESTADO) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, idCliente);
+            stmt.setDouble(2, total);
+            stmt.setString(3, estado);
+            stmt.executeUpdate();
+
+            // Obtener ID generado
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                idCompra = rs.getInt(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idCompra;
+    }
+
+    /**
+     * Inserta un producto en la tabla DETALLE_COMPRA asociado a una compra.
+     */
+    public static void insertarDetalleCompra(int idCompra, Productos producto, int cantidad) {
+        String sql = "INSERT INTO DETALLE_COMPRA (ID_COMPRA, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idCompra);
+            stmt.setInt(2, producto.getId());
+            stmt.setInt(3, cantidad);
+            stmt.setFloat(4, producto.getPrecio());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Devuelve el historial de compras de un cliente con los detalles de productos.
+     */
+    public static List<String> historialComprasCliente(int idCliente) {
+        List<String> historial = new ArrayList<>();
+        String sql = "SELECT c.ID_COMPRA, c.FECHA_COMPRA, c.TOTAL, c.ESTADO, "
+                   + "p.NOMBRE, d.CANTIDAD, d.PRECIO_UNITARIO "
+                   + "FROM COMPRA c "
+                   + "JOIN DETALLE_COMPRA d ON c.ID_COMPRA = d.ID_COMPRA "
+                   + "JOIN PRODUCTO p ON d.ID_PRODUCTO = p.ID_PRODUCTO "
+                   + "WHERE c.ID_CLIENTE = ? "
+                   + "ORDER BY c.FECHA_COMPRA DESC";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idCompra = rs.getInt("ID_COMPRA");
+                String fecha = rs.getString("FECHA_COMPRA");
+                double total = rs.getDouble("TOTAL");
+                String estado = rs.getString("ESTADO");
+                String nombreProducto = rs.getString("NOMBRE");
+                int cantidad = rs.getInt("CANTIDAD");
+                float precioUnitario = rs.getFloat("PRECIO_UNITARIO");
+
+                String linea = String.format("Compra #%d (%s) - %s - Total: %.2f | Producto: %s x%d a %.2f",
+                        idCompra, fecha, estado, total, nombreProducto, cantidad, precioUnitario);
+                historial.add(linea);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return historial;
+    }
     
 
 }
