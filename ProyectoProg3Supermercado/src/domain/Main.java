@@ -39,7 +39,6 @@ public class Main {
         });
         
         ////////////
-        BD.conectar();
 
      // Insertar nueva compra
      int idCompra = BD.insertarCompra(1, 150.75, "COMPLETADA");
@@ -59,7 +58,6 @@ public class Main {
      List<String> historial = BD.historialComprasCliente(1);
      historial.forEach(System.out::println);
 
-     BD.desconectar();
      /////////////
     }
 }
