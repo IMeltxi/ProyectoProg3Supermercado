@@ -11,6 +11,7 @@ import javax.swing.border.TitledBorder;
 
 import domain.Cliente;
 import domain.Productos;
+import db.BD; 
 
 public class IniciarSesion extends JFrame {
     private JTextField correoField;
@@ -21,7 +22,6 @@ public class IniciarSesion extends JFrame {
 
     public IniciarSesion() {
         
-
         JFrame vActual = this;
 
         // Configuración de ventana
@@ -58,7 +58,7 @@ public class IniciarSesion extends JFrame {
 
         panelBotones.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        JLabel contrasenaLabel = new JLabel("contrasena:");
+        JLabel contrasenaLabel = new JLabel("Contraseña:");
         contrasenaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         contrasenaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(contrasenaLabel);
@@ -94,11 +94,33 @@ public class IniciarSesion extends JFrame {
                 String usuarioPuesto = correoField.getText();
                 String passwordStr = new String(contrasenaField.getPassword());
 
+                // 1. Caso ADMIN
                 if (usuarioPuesto.equals("admin") && passwordStr.equals("admin123")) {
                     vActual.setVisible(false);
                     new Ventanagestion(vActual, clientes, productos);
-                } else {
-                    JOptionPane.showMessageDialog(vActual, "Usuario o contraseña incorrectos");
+                } 
+                // 2. Caso CLIENTE
+                else {
+                    boolean loginCorrecto = false;
+                    
+                    List<Cliente> usuariosBD = BD.obtenerCliente();
+                    
+                    for (Cliente c : usuariosBD) {
+                        // Verificamos email y contraseña
+                        if (c.getEmail() != null && c.getEmail().equals(usuarioPuesto) && 
+                            c.getContrasena() != null && c.getContrasena().equals(passwordStr)) {
+                            loginCorrecto = true;
+                            break;
+                        }
+                    }
+
+                    if (loginCorrecto) {
+                        vActual.setVisible(false);
+                        // Abrimos la ventana principal de la tienda para el usuario
+                        new VentanaPrincipal(); 
+                    } else {
+                        JOptionPane.showMessageDialog(vActual, "Usuario o contraseña incorrectos");
+                    }
                 }
             }
         });

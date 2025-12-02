@@ -44,6 +44,8 @@ public class BD {
     	}
     }
     
+    
+    
   
     
     public static ArrayList<Cliente> obtenerCliente() {
@@ -241,9 +243,8 @@ public class BD {
 
     // --- MÉTODOS PARA HISTORIAL DE COMPRAS ---
     
-    /**
-     * Inserta una nueva compra en la tabla COMPRA y devuelve el ID generado.
-     */
+    // Inserta una nueva compra en la tabla COMPRA y devuelve el ID generado.
+
     public static int insertarCompra(int idCliente, double total, String estado) {
         int idCompra = -1;
         String sql = "INSERT INTO COMPRA (ID_CLIENTE, TOTAL, ESTADO) VALUES (?, ?, ?)";
@@ -265,9 +266,8 @@ public class BD {
         return idCompra;
     }
 
-    /**
-     * Inserta un producto en la tabla DETALLE_COMPRA asociado a una compra.
-     */
+    // Inserta un producto en la tabla DETALLE_COMPRA asociado a una compra.
+     
     public static void insertarDetalleCompra(int idCompra, Productos producto, int cantidad) {
         String sql = "INSERT INTO DETALLE_COMPRA (ID_COMPRA, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -281,9 +281,7 @@ public class BD {
         }
     }
 
-    /**
-     * Devuelve el historial de compras de un cliente con los detalles de productos.
-     */
+    //Devuelve el historial de compras de un cliente con los detalles de productos.
     public static List<String> historialComprasCliente(int idCliente) {
         List<String> historial = new ArrayList<>();
         String sql = "SELECT c.ID_COMPRA, c.FECHA_COMPRA, c.TOTAL, c.ESTADO, "
@@ -315,6 +313,36 @@ public class BD {
             e.printStackTrace();
         }
         return historial;
+    }
+    
+
+    public static void crearTablas() {
+        String sqlCompra = "CREATE TABLE IF NOT EXISTS COMPRA ("
+                + "ID_COMPRA INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID_CLIENTE INTEGER, "
+                + "TOTAL REAL, "
+                + "ESTADO TEXT, "
+                + "FECHA_COMPRA TEXT DEFAULT (datetime('now','localtime')), " // SQLite guarda fechas como texto por defecto
+                + "FOREIGN KEY(ID_CLIENTE) REFERENCES CLIENTE(ID_CLIENTE)"
+                + ")";
+
+        String sqlDetalle = "CREATE TABLE IF NOT EXISTS DETALLE_COMPRA ("
+                + "ID_COMPRA INTEGER, "
+                + "ID_PRODUCTO INTEGER, "
+                + "CANTIDAD INTEGER, "
+                + "PRECIO_UNITARIO REAL, "
+                + "PRIMARY KEY (ID_COMPRA, ID_PRODUCTO), "
+                + "FOREIGN KEY(ID_COMPRA) REFERENCES COMPRA(ID_COMPRA), "
+                + "FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO)"
+                + ")";
+
+        try (Statement stmt = con.createStatement()) {
+            stmt.execute(sqlCompra);
+            stmt.execute(sqlDetalle);
+            System.out.println("Tablas de compra verificadas/creadas correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al crear tablas: " + e.getMessage());
+        }
     }
     
 

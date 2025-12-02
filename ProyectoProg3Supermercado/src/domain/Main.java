@@ -10,6 +10,8 @@ public class Main {
     	
     	BD.conectar();
     	
+    	BD.crearTablas();
+    	
         // --- Productos ---
     	/*
         List<Productos> productos = new ArrayList<>();
