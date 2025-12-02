@@ -39,7 +39,7 @@ public class VentanaAdministrador extends JFrame {
 
         JFrame vActual = this;
 
-        pCentro = new JPanel(new GridBagLayout()); // Usamos GridBagLayout
+        pCentro = new JPanel(new GridBagLayout()); 
         pNorte = new JPanel();
         pSur = new JPanel();
 
@@ -82,7 +82,7 @@ public class VentanaAdministrador extends JFrame {
 
         setVisible(true);
 
-        // --- MouseAdapter para vista administrador ---
+        // MouseAdapter para vista administrador
         vistaadministrador.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -98,7 +98,7 @@ public class VentanaAdministrador extends JFrame {
             }
         });
 
-        // --- MouseAdapter para vista usuario (opcional) ---
+        // MouseAdapter para vista usuario
         vistausuario.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

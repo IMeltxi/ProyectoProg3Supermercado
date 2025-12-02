@@ -3,35 +3,47 @@ package gui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
+import db.BD;
+import domain.Productos;
 
 public class PanelPrincipalContenido extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private VentanaCarrito carritoRef; // Referencia al carrito
+    private VentanaCarrito carritoRef; 
 
     public PanelPrincipalContenido(VentanaCarrito carrito) {
         this.carritoRef = carrito; 
         
         setBackground(Color.WHITE);
-        setLayout(new GridLayout(3, 4, 20, 20)); 
+        
+     
+        // 1. Obtener productos de la BD
+        List<Productos> listaProductos = BD.obtenerProductos();
+        
+        int filas = (int) Math.ceil(listaProductos.size() / 4.0);
+        if (filas < 3) filas = 3;
+       
+        setLayout(new GridLayout(filas, 4, 20, 20)); 
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
-
-        for (int i = 1; i <= 12; i++) {
-            double precio = Math.round((Math.random() * 10 + 1) * 100.0) / 100.0;
-            add(crearPanelProducto("Producto " + i, precio, i));
+        
+        for (Productos p : listaProductos) {
+            add(crearPanelProducto(p));
         }
     }
 
-    private JPanel crearPanelProducto(String nombre, double precio, int j) {
+    private JPanel crearPanelProducto(Productos p) {
         JPanel panelProducto = new JPanel(new BorderLayout());
         panelProducto.setBackground(Color.WHITE);
         panelProducto.setBorder(new LineBorder(new Color(0x013ADF), 2, true));
 
         JLabel lblImagen = new JLabel();
         lblImagen.setHorizontalAlignment(JLabel.CENTER);
-        String path = "fotos_png/Producto" + j + ".png";
+        String path = "fotos_png/Producto" + p.getId() + ".png";
         ImageIcon icon;
         File f = new File(path);
         if (f.exists()) {
@@ -45,24 +57,21 @@ public class PanelPrincipalContenido extends JPanel {
             icon = new ImageIcon(placeholder);
         }
         lblImagen.setIcon(icon);
-        // ...
 
-        JLabel lblNombre = new JLabel(nombre, JLabel.CENTER);
+        JLabel lblNombre = new JLabel(p.getNombre(), JLabel.CENTER);
         lblNombre.setFont(new Font("SansSerif", Font.BOLD, 16));
         
-        // Mostrar precio en la etiqueta
-        JLabel lblPrecio = new JLabel(precio + " €", JLabel.CENTER);
+        JLabel lblPrecio = new JLabel(p.getPrecio() + " €", JLabel.CENTER);
 
         JButton btnAdd = new JButton("Añadir");
         btnAdd.setBackground(new Color(0x013ADF));
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setFont(new Font("SansSerif", Font.BOLD, 14));
 
-        // LÓGICA DEL BOTÓN AÑADIR 
         btnAdd.addActionListener(e -> {
             if (carritoRef != null) {
-                carritoRef.agregarProducto(nombre, precio);
-                JOptionPane.showMessageDialog(this, nombre + " añadido al carrito.");
+                carritoRef.agregarProducto(p.getId(), p.getNombre(), p.getPrecio());
+                JOptionPane.showMessageDialog(this, p.getNombre() + " añadido al carrito.");
             }
         });
 
@@ -73,7 +82,7 @@ public class PanelPrincipalContenido extends JPanel {
         centro.add(lblPrecio, BorderLayout.SOUTH);
 
         panelProducto.add(lblNombre, BorderLayout.NORTH);
-        panelProducto.add(centro, BorderLayout.CENTER); // Imagen + Precio
+        panelProducto.add(centro, BorderLayout.CENTER); 
         panelProducto.add(btnAdd, BorderLayout.PAGE_END);
 
         return panelProducto;

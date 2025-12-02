@@ -85,7 +85,7 @@ public class Clientediplay extends JPanel {
 
 			@Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no serán editables
+                return false; 
             }
         };
            
@@ -134,12 +134,12 @@ public class Clientediplay extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10); // Margen alrededor de los componentes
 
         // Configuración para la JTable
-        gbc.gridx = 0; // Columna 0
-        gbc.gridy = 0; // Fila 0
-        gbc.gridwidth = 2; // La tabla ocupa dos columnas
-        gbc.weightx = 1.0; // Peso horizontal (se expande en ancho)
-        gbc.weighty = 1.0; // Peso vertical (se expande en alto)
-        gbc.fill = GridBagConstraints.BOTH; // La tabla ocupa todo el espacio disponible
+        gbc.gridx = 0; 
+        gbc.gridy = 0; 
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
         pCentro.add(new JScrollPane(tabla), gbc);
 
         // Configuración para los botones
@@ -148,11 +148,11 @@ public class Clientediplay extends JPanel {
         botonesPanel.add(Eliminar);
         botonesPanel.add(btnAnadir);
 
-        gbc.gridx = 0; // 
-        gbc.gridy = 1; // 
-        gbc.gridwidth = 2; // Ocupa dos columnas
-        gbc.weightx = 0; // Los botones no se expanden horizontalmente
-        gbc.weighty = 0; // Los botones no se expanden verticalmente
+        gbc.gridx = 0; 
+        gbc.gridy = 1; 
+        gbc.gridwidth = 2; 
+        gbc.weightx = 0; 
+        gbc.weighty = 0;
       
         pCentro.add(botonesPanel, gbc);
         
@@ -169,7 +169,7 @@ public class Clientediplay extends JPanel {
                 int fila = tabla.getSelectedRow();
                 if (fila >= 0) {
                     try {
-                        // Recogemos datos de la tabla EN ORDEN CORRECTO
+                        // Recogemos datos de la tabla
                         int id = (int) tabla.getValueAt(fila, 0);
                         String tipoStr = tabla.getValueAt(fila, 1).toString();
                         String nom = tabla.getValueAt(fila, 2).toString();
@@ -177,7 +177,7 @@ public class Clientediplay extends JPanel {
                         String email = tabla.getValueAt(fila, 4).toString();
                         
                         Object fechaObj = tabla.getValueAt(fila, 5); 
-                        String fechaStr = fechaObj.toString(); // LocalDate a String
+                        String fechaStr = fechaObj.toString(); 
 
                         String pass = tabla.getValueAt(fila, 6).toString();
                         int pts = (int) tabla.getValueAt(fila, 7);
@@ -207,7 +207,7 @@ public class Clientediplay extends JPanel {
                     int opt = JOptionPane.showConfirmDialog(null, "¿Eliminar cliente?", "Confirmar", JOptionPane.YES_NO_OPTION);
                     if (opt == JOptionPane.YES_OPTION) {
                         try {
-                            BD.EliminarUsuario(id); // Llamada a BD
+                            BD.EliminarUsuario(id); 
                             ((DefaultTableModel)tabla.getModel()).removeRow(fila);
                             JOptionPane.showMessageDialog(null, "Eliminado.");
                         } catch (Exception ex) {

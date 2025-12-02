@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -50,10 +51,9 @@ public class Productodisplay extends JPanel {
         
         this.add(pSur, BorderLayout.SOUTH);
        
-        //List<Producto> listaproductos = db.obtenerProductos();
         
        
-        //opciones de usuario
+        //Opciones de usuario
         Guardar = new Button("Guardar");
         Guardar.setBackground(Color.BLUE.darker());
         Guardar.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
@@ -80,7 +80,7 @@ public class Productodisplay extends JPanel {
 
 			@Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no serán editables
+                return false;
             }
         };
         cargarDatosEnTabla();
@@ -126,36 +126,12 @@ public class Productodisplay extends JPanel {
         
         pSur.add(botonesPanel);
         
-        Nueva_Producto.addMouseListener(new MouseListener() {
+        Nueva_Producto.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				mostrarDialogoProducto(null);
 		
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
         	
         });
@@ -211,7 +187,6 @@ public class Productodisplay extends JPanel {
         	            try {
         	                BD.EliminarProducto(idContenido);
 
-        	                // Quitar fila
         	                ((DefaultTableModel) tabla.getModel()).removeRow(filaSeleccionada);
 
         	                JOptionPane.showMessageDialog(null, "Contenido eliminado correctamente.");
@@ -319,8 +294,8 @@ public class Productodisplay extends JPanel {
                     p.setPrecio(pr); p.setStock(st);
                     BD.actualizarProducto(p);
                 }
-                cargarDatosEnTabla(); // Refrescar tabla
-                d.dispose(); // Cerrar ventana
+                cargarDatosEnTabla(); 
+                d.dispose(); 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(d, "Error en datos: " + ex.getMessage());
             }

@@ -66,7 +66,6 @@ public class RegistroSesion extends JFrame {
         add(panel);
     }
 
-    // Método main para ejecutar la ventana
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             RegistroSesion ventana = new RegistroSesion();

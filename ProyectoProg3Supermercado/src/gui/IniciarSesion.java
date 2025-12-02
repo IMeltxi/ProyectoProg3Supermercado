@@ -101,23 +101,22 @@ public class IniciarSesion extends JFrame {
                 } 
                 // 2. Caso CLIENTE
                 else {
-                    boolean loginCorrecto = false;
-                    
+                    Cliente clienteEncontrado = null;
                     List<Cliente> usuariosBD = BD.obtenerCliente();
                     
                     for (Cliente c : usuariosBD) {
                         // Verificamos email y contraseña
                         if (c.getEmail() != null && c.getEmail().equals(usuarioPuesto) && 
                             c.getContrasena() != null && c.getContrasena().equals(passwordStr)) {
-                            loginCorrecto = true;
+                            clienteEncontrado = c;
                             break;
                         }
                     }
 
-                    if (loginCorrecto) {
+                    if (clienteEncontrado != null) {
                         vActual.setVisible(false);
                         // Abrimos la ventana principal de la tienda para el usuario
-                        new VentanaPrincipal(); 
+                        new VentanaPrincipal(clienteEncontrado); 
                     } else {
                         JOptionPane.showMessageDialog(vActual, "Usuario o contraseña incorrectos");
                     }

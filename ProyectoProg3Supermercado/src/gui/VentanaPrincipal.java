@@ -5,17 +5,20 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import domain.Cliente;
+
 public class VentanaPrincipal extends JFrame {
 
     private static final long serialVersionUID = 1L;
     
-    // Referencias para mantener el estado de las vistas
     private VentanaCarrito ventanaCarrito;
     private PanelPrincipalContenido panelProductos;
     private JPanel pCentral;
+    private Cliente clienteActual;
 
-    public VentanaPrincipal() {
-        // Título de la ventana del sistema operativo
+    public VentanaPrincipal(Cliente cliente) {
+    	this.clienteActual = cliente;
+        
         setTitle("MercaDeusto");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,22 +26,20 @@ public class VentanaPrincipal extends JFrame {
         setLayout(new BorderLayout());
         
         // 1. INSTANCIAMOS EL CARRITO Y LOS PRODUCTOS UNA SOLA VEZ
-        ventanaCarrito = new VentanaCarrito(); 
+        ventanaCarrito = new VentanaCarrito(clienteActual); 
         panelProductos = new PanelPrincipalContenido(ventanaCarrito); 
 
-        // --- CREACION PANEL NORTE ---
+        // CREACION PANEL NORTE 
         JPanel panelNorte = new JPanel();
-        // Aumentamos un poco la altura para que quepa bien el título grande
         panelNorte.setPreferredSize(new Dimension(this.getWidth(), 85)); 
       	panelNorte.setLayout(new BorderLayout());
       	this.add(panelNorte, BorderLayout.NORTH);
       		
-   		// --- CREACION PANEL CENTRAL ---
+   		// CREACION PANEL CENTRAL
    		pCentral = new JPanel();
    		pCentral.setLayout(new BorderLayout());  
    		this.add(pCentral, BorderLayout.CENTER);
    		
-   		// Por defecto cargamos los productos
    		pCentral.add(panelProductos, BorderLayout.CENTER);
 
 
@@ -54,14 +55,14 @@ public class VentanaPrincipal extends JFrame {
     	
     	// 2. El Título Grande
     	JLabel labelTituloGrande = new JLabel("MercaDeusto");
-    	labelTituloGrande.setFont(new Font("SansSerif", Font.BOLD, 40)); // Fuente grande
-    	labelTituloGrande.setForeground(Color.WHITE); // Texto blanco
+    	labelTituloGrande.setFont(new Font("SansSerif", Font.BOLD, 40)); 
+    	labelTituloGrande.setForeground(Color.WHITE); 
     	
     	panelNorteCentro.add(labelLogo);
     	panelNorteCentro.add(labelTituloGrande);
     			
     		
-   		// --- BOTONES INICIO, MI LISTA (IZQUIERDA) ---
+   		// BOTONES INICIO, MI LISTA (IZQUIERDA)
    		JPanel panelNorteIzquierda = new JPanel();
    		panelNorteIzquierda.setBackground(new Color(0x013ADF));
    		panelNorteIzquierda.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
@@ -102,11 +103,10 @@ public class VentanaPrincipal extends JFrame {
         
         panelNorteIzquierda.add(botonMiLista);
     		
-    	// Añadir paneles al Norte
     	panelNorte.add(panelNorteCentro, BorderLayout.CENTER);
     	panelNorte.add(panelNorteIzquierda, BorderLayout.WEST);
     			
-    	// --- PANEL SUR ---
+    	// PANEL SUR
     	JPanel panelSur = new JPanel();
     	panelSur.setBackground(new Color(0x013ADF));
     	JLabel lblFooter = new JLabel("MercaDeusto");
@@ -118,7 +118,7 @@ public class VentanaPrincipal extends JFrame {
     	this.add(panelNorte, BorderLayout.NORTH);	
     	this.add(panelSur, BorderLayout.SOUTH);	
     	
-    	// --- MENU SUPERIOR ---
+    	// MENU SUPERIOR 
     	JMenuBar menubar = new JMenuBar();
     	JMenu opciones = new JMenu("Opciones");
     	opciones.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
@@ -142,9 +142,5 @@ public class VentanaPrincipal extends JFrame {
     		
     	setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new VentanaPrincipal();
     }
 }

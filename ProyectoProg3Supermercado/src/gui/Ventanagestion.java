@@ -34,7 +34,6 @@ public class Ventanagestion extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // --- Pestañas ---
         JTabbedPane tabbed = new JTabbedPane();
 
         // Panel de usuarios
@@ -54,15 +53,15 @@ public class Ventanagestion extends JFrame {
 
         add(tabbed, BorderLayout.CENTER);
         
-        //añadir clientes
+        //Añadir clientes
         cleintedisplay = new Clientediplay();
         cliente.add(cleintedisplay, BorderLayout.CENTER);
         
-        //añadir productos
+        //Añadir productos
         pDisplay = new Productodisplay();
         p_s.add(pDisplay, BorderLayout.CENTER);
 
-        // --- Menú ---
+        // Menú
         JMenuBar menu = new JMenuBar();
         JMenu fichero = new JMenu("Fichero");
         menu.add(fichero);
@@ -97,7 +96,7 @@ public class Ventanagestion extends JFrame {
         setVisible(true);
     }
 
-    // --- Tabla de usuarios con columna eliminar ---
+    // Tabla de usuarios con columna eliminar 
     private void cargarTablaUsuarios() {
         String[] columnas = {"ID", "Nombre", "Apellido", "Fecha Nac.", "Email", "Tipo", "Puntos", "Eliminar"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0) {
@@ -126,7 +125,7 @@ public class Ventanagestion extends JFrame {
         tableUsuarios.getColumn("Eliminar").setCellEditor(new ButtonEditorUsuarios(model, clientes));
     }
 
-    // --- Tabla de productos con columna eliminar ---
+    // Tabla de productos con columna eliminar
     private void cargarTablaProductos() {
         String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Stock", "Eliminar"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0) {
@@ -153,7 +152,7 @@ public class Ventanagestion extends JFrame {
         tableProductos.getColumn("Eliminar").setCellEditor(new ButtonEditorProductos(model, productos));
     }
 
-    // --- Renderer de botón ---
+    // Renderer de botón
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -167,7 +166,7 @@ public class Ventanagestion extends JFrame {
         }
     }
 
-    // --- Editor de botón para usuarios ---
+    // Editor de botón para usuarios
     private static class ButtonEditorUsuarios extends AbstractCellEditor implements TableCellEditor {
         private JButton button;
         private DefaultTableModel model;
@@ -196,7 +195,7 @@ public class Ventanagestion extends JFrame {
         }
     }
 
-    // --- Editor de botón para productos ---
+    // Editor de botón para productos
     private static class ButtonEditorProductos extends AbstractCellEditor implements TableCellEditor {
         private JButton button;
         private DefaultTableModel model;

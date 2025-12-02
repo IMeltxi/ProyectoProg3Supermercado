@@ -21,11 +21,12 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor 
         button = new JButton("Eliminar");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	fireEditingStopped();
+            	
                 int row = table.getSelectedRow();
                 if (row != -1) {
                     model.removeRow(row); 
                 }
-                fireEditingStopped();
             }
         });
     }

@@ -26,7 +26,6 @@ public class Main {
         }
 		*/
     	
-    	
         // --- Clientes ---
         List<Cliente> clientes = new ArrayList<>();
         clientes.add(new Cliente(Cliente.tipoCliente.PREMIUM, 1, "Juan", "Pérez", "1990-05-12", "juan@mail.com", "1234", 500));
@@ -43,22 +42,22 @@ public class Main {
         ////////////
 
      // Insertar nueva compra
-     int idCompra = BD.insertarCompra(1, 150.75, "COMPLETADA");
-
-     // Insertar productos en la compra
-     Productos prod1 = new Productos(); // Asegúrate de inicializar con ID y precio
-     prod1.setId(2);
-     prod1.setPrecio(50.25f);
-     BD.insertarDetalleCompra(idCompra, prod1, 2);
-
-     Productos prod2 = new Productos();
-     prod2.setId(5);
-     prod2.setPrecio(25.25f);
-     BD.insertarDetalleCompra(idCompra, prod2, 2);
-
-     // Consultar historial
-     List<String> historial = BD.historialComprasCliente(1);
-     historial.forEach(System.out::println);
+//     int idCompra = BD.insertarCompra(1, 150.75, "COMPLETADA");
+//
+//     // Insertar productos en la compra
+//     Productos prod1 = new Productos(); // Asegúrate de inicializar con ID y precio
+//     prod1.setId(2);
+//     prod1.setPrecio(50.25f);
+//     BD.insertarDetalleCompra(idCompra, prod1, 2);
+//
+//     Productos prod2 = new Productos();
+//     prod2.setId(5);
+//     prod2.setPrecio(25.25f);
+//     BD.insertarDetalleCompra(idCompra, prod2, 2);
+//
+//     // Consultar historial
+//     List<String> historial = BD.historialComprasCliente(1);
+//     historial.forEach(System.out::println);
 
      /////////////
     }

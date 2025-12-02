@@ -25,6 +25,7 @@ public class BD {
         	Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection("jdbc:sqlite:BaseDeDatos/supermecado.db");
             System.out.println("Conexión establecida.");
+            crearTablas();
             
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Error al conectar: " + e.getMessage());
@@ -36,6 +37,7 @@ public class BD {
     	if (con != null) {
     		try {
                 con.close();
+                con = null;
 
                 System.out.println("Conexión cerrada.");
             }catch (SQLException e) {
@@ -44,9 +46,6 @@ public class BD {
     	}
     }
     
-    
-    
-  
     
     public static ArrayList<Cliente> obtenerCliente() {
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -100,10 +99,10 @@ public class BD {
         return clientes;
     }
     
-    public static List<Productos> obtenerCarritoDelCliente(int idCliente) {
-        List<Productos> carrito = new ArrayList<>();
+    public static List<Object[]> obtenerCarritoDelCliente(int idCliente) {
+        List<Object[]> carrito = new ArrayList<>();
 
-        String sql = "SELECT p.ID_PRODUCTO, p.NOMBRE, p.DESCRIPCION, p.PRECIO, p.STOCK " +
+        String sql = "SELECT p.ID_PRODUCTO, p.NOMBRE, p.DESCRIPCION, p.PRECIO, p.STOCK, c.CANTIDAD " +
                      "FROM CARRITO c JOIN PRODUCTO p ON c.ID_PRODUCTO = p.ID_PRODUCTO " +
                      "WHERE c.ID_CLIENTE = ?";
 
@@ -112,19 +111,17 @@ public class BD {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Productos p = new Productos();
-                p.setId(rs.getInt("ID_PRODUCTO"));
-                p.setNombre(rs.getString("NOMBRE"));
-                p.setDescripcion(rs.getString("DESCRIPCION"));
-                p.setPrecio(rs.getFloat("PRECIO"));
-                p.setStock(rs.getInt("STOCK"));
-                carrito.add(p);
+                int idProd = rs.getInt("ID_PRODUCTO");
+                String nombre = rs.getString("NOMBRE");
+                double precio = rs.getDouble("PRECIO");
+                int cantidad = rs.getInt("CANTIDAD");
+                double total = precio * cantidad;
+                
+                carrito.add(new Object[]{idProd, nombre, (double)cantidad, precio, total, "Eliminar"});
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return carrito;
     }
     
@@ -212,7 +209,7 @@ public class BD {
         }
     }
 
-    // --- MÉTODOS PARA PRODUCTOS ---
+    //MÉTODOS PARA PRODUCTOS
 
     public static void insertarProducto(Productos p) {
         String sql = "INSERT INTO PRODUCTO (NOMBRE, DESCRIPCION, PRECIO, STOCK) VALUES (?, ?, ?, ?)";
@@ -241,7 +238,7 @@ public class BD {
         }
     }
 
-    // --- MÉTODOS PARA HISTORIAL DE COMPRAS ---
+    // MÉTODOS PARA HISTORIAL DE COMPRAS 
     
     // Inserta una nueva compra en la tabla COMPRA y devuelve el ID generado.
 
@@ -254,7 +251,6 @@ public class BD {
             stmt.setString(3, estado);
             stmt.executeUpdate();
 
-            // Obtener ID generado
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 idCompra = rs.getInt(1);
@@ -317,33 +313,118 @@ public class BD {
     
 
     public static void crearTablas() {
-        String sqlCompra = "CREATE TABLE IF NOT EXISTS COMPRA ("
-                + "ID_COMPRA INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "ID_CLIENTE INTEGER, "
-                + "TOTAL REAL, "
-                + "ESTADO TEXT, "
-                + "FECHA_COMPRA TEXT DEFAULT (datetime('now','localtime')), " // SQLite guarda fechas como texto por defecto
-                + "FOREIGN KEY(ID_CLIENTE) REFERENCES CLIENTE(ID_CLIENTE)"
-                + ")";
-
-        String sqlDetalle = "CREATE TABLE IF NOT EXISTS DETALLE_COMPRA ("
-                + "ID_COMPRA INTEGER, "
-                + "ID_PRODUCTO INTEGER, "
-                + "CANTIDAD INTEGER, "
-                + "PRECIO_UNITARIO REAL, "
-                + "PRIMARY KEY (ID_COMPRA, ID_PRODUCTO), "
-                + "FOREIGN KEY(ID_COMPRA) REFERENCES COMPRA(ID_COMPRA), "
-                + "FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO)"
-                + ")";
-
+    	if (con == null) return;
         try (Statement stmt = con.createStatement()) {
-            stmt.execute(sqlCompra);
-            stmt.execute(sqlDetalle);
-            System.out.println("Tablas de compra verificadas/creadas correctamente.");
+            
+            // 1. TABLA CLIENTE
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS CLIENTE (" +
+                               "ID_CLIENTE INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                               "TIPO TEXT, " +
+                               "NOMBRE TEXT, " +
+                               "APELLIDO TEXT, " +
+                               "EMAIL TEXT, " +
+                               "FECHANA TEXT, " +
+                               "CONTRASEYA TEXT, " +
+                               "PUNTOS INTEGER)");
+
+            // 2. TABLA PRODUCTO
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS PRODUCTO (" +
+                               "ID_PRODUCTO INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                               "NOMBRE TEXT, DESCRIPCION TEXT, PRECIO REAL, STOCK INTEGER)");
+
+            // 3. TABLA CARRITO
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS CARRITO (" +
+                               "ID_CLIENTE INTEGER, ID_PRODUCTO INTEGER, CANTIDAD INTEGER DEFAULT 1, " +
+                               "PRIMARY KEY (ID_CLIENTE, ID_PRODUCTO), " +
+                               "FOREIGN KEY(ID_CLIENTE) REFERENCES CLIENTE(ID_CLIENTE), " +
+                               "FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO))");
+            
+            // 4. TABLAS COMPRA Y DETALLE
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS COMPRA (" +
+                               "ID_COMPRA INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                               "ID_CLIENTE INTEGER, TOTAL REAL, ESTADO TEXT, " +
+                               "FECHA_COMPRA TEXT DEFAULT CURRENT_TIMESTAMP)");
+            
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS DETALLE_COMPRA (" +
+                               "ID_COMPRA INTEGER, ID_PRODUCTO INTEGER, CANTIDAD INTEGER, PRECIO_UNITARIO REAL)");
+            
+            try {
+                stmt.executeUpdate("ALTER TABLE CARRITO ADD COLUMN CANTIDAD INTEGER DEFAULT 1");
+            } catch (SQLException e) {}
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRODUCTO");
+            if (rs.next() && rs.getInt(1) == 0) {
+                System.out.println("Base de datos de productos vacía. Insertando productos por defecto...");
+                String sqlInsert = "INSERT INTO PRODUCTO (NOMBRE, DESCRIPCION, PRECIO, STOCK) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement pstmt = con.prepareStatement(sqlInsert)) {
+                    for (int i = 1; i <= 12; i++) {
+                        pstmt.setString(1, "Producto " + i);
+                        pstmt.setString(2, "Descripción del producto " + i);
+                        double precio = Math.round((Math.random() * 10 + 1) * 100.0) / 100.0; 
+                        pstmt.setDouble(3, precio);
+                        pstmt.setInt(4, 100);
+                        pstmt.executeUpdate();
+                    }
+                }
+            }
+            
         } catch (SQLException e) {
-            System.err.println("Error al crear tablas: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
+    public static void agregarProductoCarrito(int idCliente, int idProducto) {
+        // Verificar si ya existe para sumar cantidad o insertar nuevo
+        String sqlCheck = "SELECT CANTIDAD FROM CARRITO WHERE ID_CLIENTE = ? AND ID_PRODUCTO = ?";
+        try {
+            if (con == null) conectar();
+            PreparedStatement pst = con.prepareStatement(sqlCheck);
+            pst.setInt(1, idCliente);
+            pst.setInt(2, idProducto);
+            ResultSet rs = pst.executeQuery();
 
+            if (rs.next()) {
+                // Existe: Actualizamos cantidad (+1)
+                String sqlUpdate = "UPDATE CARRITO SET CANTIDAD = CANTIDAD + 1 WHERE ID_CLIENTE = ? AND ID_PRODUCTO = ?";
+                PreparedStatement pstUp = con.prepareStatement(sqlUpdate);
+                pstUp.setInt(1, idCliente);
+                pstUp.setInt(2, idProducto);
+                pstUp.executeUpdate();
+            } else {
+                // No existe: Insertamos
+                String sqlInsert = "INSERT INTO CARRITO (ID_CLIENTE, ID_PRODUCTO, CANTIDAD) VALUES (?, ?, 1)";
+                PreparedStatement pstIn = con.prepareStatement(sqlInsert);
+                pstIn.setInt(1, idCliente);
+                pstIn.setInt(2, idProducto);
+                pstIn.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void eliminarProductoCarrito(int idCliente, int idProducto) {
+        String sql = "DELETE FROM CARRITO WHERE ID_CLIENTE = ? AND ID_PRODUCTO = ?";
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setInt(1, idCliente);
+            pstmt.setInt(2, idProducto);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void actualizarCantidadCarrito(int idCliente, int idProducto, int nuevaCantidad) {
+        String sql = "UPDATE CARRITO SET CANTIDAD = ? WHERE ID_CLIENTE = ? AND ID_PRODUCTO = ?";
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setInt(1, nuevaCantidad);
+            pstmt.setInt(2, idCliente);
+            pstmt.setInt(3, idProducto);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    
 }
