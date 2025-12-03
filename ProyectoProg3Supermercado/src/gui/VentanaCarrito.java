@@ -27,7 +27,7 @@ public class VentanaCarrito extends JPanel {
     private DefaultTableModel modeloTabla;
     private Cliente clienteLogueado;
 
-    String[] columnas = {"Imagen","Producto", "Cantidad", "Precio Unitario", "Precio Total", "Editar"};
+    String[] columnas = {"Imagen","Producto", "Cantidad", "Precio Unitario", "Precio Total", "Editar","ID"};
 
 
     public VentanaCarrito(Cliente cliente) {
@@ -52,7 +52,7 @@ public class VentanaCarrito extends JPanel {
             public void removeRow(int row) {
                 if (clienteLogueado != null) {
                     try {
-                        int idProd = Integer.parseInt(getValueAt(row, 0).toString());
+                        int idProd = Integer.parseInt(getValueAt(row, 6).toString());
                         BD.eliminarProductoCarrito(clienteLogueado.getidCliente(), idProd);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -71,6 +71,11 @@ public class VentanaCarrito extends JPanel {
         });
 
         tablaCarrito = new TablaTooltips(modeloTabla);
+        
+        tablaCarrito.getColumnModel().getColumn(6).setMinWidth(0);
+        tablaCarrito.getColumnModel().getColumn(6).setMaxWidth(0);
+        tablaCarrito.getColumnModel().getColumn(6).setWidth(0);
+        
         tablaCarrito.setRowHeight(30);
 
         add(new JScrollPane(tablaCarrito), BorderLayout.CENTER);
@@ -97,7 +102,7 @@ public class VentanaCarrito extends JPanel {
 
     private void recalcularFila(int row) {
         try {
-            int idProd = Integer.parseInt(modeloTabla.getValueAt(row, 0).toString());
+            int idProd = Integer.parseInt(modeloTabla.getValueAt(row, 6).toString());
             double cantidad = Double.parseDouble(modeloTabla.getValueAt(row, 2).toString());
             double precio = Double.parseDouble(modeloTabla.getValueAt(row, 3).toString());
             double total = cantidad * precio;
@@ -133,7 +138,8 @@ public class VentanaCarrito extends JPanel {
             cantidad,           // Columna 2 → Cantidad (por defecto 1)
             precioUnitario,     // Columna 3 → Precio unitario
             total,              // Columna 4 → Precio total
-            "Editar"            // Columna 5 → Botón Editar
+            "Editar",			// Columna 5 → Botón Editar
+            p.getId()			// Columna 6 → ID (oculto)
         });
 
         tablaCarrito.revalidate();
