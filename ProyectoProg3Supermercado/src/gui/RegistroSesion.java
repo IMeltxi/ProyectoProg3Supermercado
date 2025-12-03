@@ -120,6 +120,11 @@ public class RegistroSesion extends JFrame {
             BD.insertarCliente(nuevo);
 
             JOptionPane.showMessageDialog(this, "Usuario registrado correctamente.");
+            
+            IniciarSesion inicioSesion = new IniciarSesion();
+            inicioSesion.setVisible(true);
+            this.dispose();
+            
         });
 
 
