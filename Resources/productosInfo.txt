@@ -1,0 +1,13 @@
+nombre;descripcion;precio;stock;id;rutaImagen
+"Queso rallado";"Queso rallado para pasta y gratinados";2.49;50;1;"fotos_png/Producto1.png"
+"Café molido 250g";"Café mezcla para cafetera clásica";3.95;40;2;"fotos_png/Producto2.png"
+"Bizcocho de pistacho";"Bizcocho esponjoso con pistacho natural";4.50;25;3;"fotos_png/Producto3.png"
+"Calendario de Adviento";"Calendario con 24 chocolates surtidos";5.99;20;4;"fotos_png/Producto4.png"
+"Vino tinto 750ml";"Vino tinto crianza, D.O. Rioja";7.90;35;5;"fotos_png/Producto5.png"
+"Naranjas 1kg";"Naranjas frescas para zumo y mesa";2.10;60;6;"fotos_png/Producto6.png"
+"Tomate ensalada 1kg";"Tomates frescos para ensalada";2.30;55;7;"fotos_png/Producto7.png"
+"Arándanos 125g";"Arándanos frescos de temporada";3.20;30;8;"fotos_png/Producto8.png"
+"Lechuga iceberg";"Lechuga fresca para ensaladas";1.25;45;9;"fotos_png/Producto9.png"
+"Pepinillos en vinagre";"Pepinillos crujientes en vinagre";1.80;50;10;"fotos_png/Producto10.png"
+"Cerveza San Miguel (6x33cl)";"Pack de 6 botellines San Miguel";4.60;70;11;"fotos_png/Producto11.png"
+"Pasta macarrón 500g";"Pasta de trigo duro tipo macarrón";0.99;100;12;"fotos_png/Producto12.png"

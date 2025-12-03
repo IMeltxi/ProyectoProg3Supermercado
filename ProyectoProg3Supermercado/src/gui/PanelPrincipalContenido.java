@@ -8,23 +8,21 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import db.BD;
+import io.LectorCSV; // <-- IMPORTANTE
 import domain.Productos;
 
 public class PanelPrincipalContenido extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private VentanaCarrito carritoRef; 
+    private List<Productos> listaProductos;
 
-    public PanelPrincipalContenido(VentanaCarrito carrito) {
+    public PanelPrincipalContenido(VentanaCarrito carrito, List<Productos> listaProductos) {
         this.carritoRef = carrito; 
+        this.listaProductos = listaProductos;
         
         setBackground(Color.WHITE);
-        
-     
-        // 1. Obtener productos de la BD
-        List<Productos> listaProductos = BD.obtenerProductos();
-        
+
         int filas = (int) Math.ceil(listaProductos.size() / 4.0);
         if (filas < 3) filas = 3;
        
@@ -44,6 +42,7 @@ public class PanelPrincipalContenido extends JPanel {
         JLabel lblImagen = new JLabel();
         lblImagen.setHorizontalAlignment(JLabel.CENTER);
         String path = "fotos_png/Producto" + p.getId() + ".png";
+        p.setRutaImagen(path); //
         ImageIcon icon;
         File f = new File(path);
         if (f.exists()) {
@@ -70,12 +69,11 @@ public class PanelPrincipalContenido extends JPanel {
 
         btnAdd.addActionListener(e -> {
             if (carritoRef != null) {
-                carritoRef.agregarProducto(p.getId(), p.getNombre(), p.getPrecio());
-                JOptionPane.showMessageDialog(this, p.getNombre() + " añadido al carrito.");
+            	carritoRef.agregarProducto(p);
+                //JOptionPane.showMessageDialog(this, p.getNombre() + " añadido al carrito.");
             }
         });
 
-        // Estructura visual
         JPanel centro = new JPanel(new BorderLayout());
         centro.setBackground(Color.WHITE);
         centro.add(lblImagen, BorderLayout.CENTER);

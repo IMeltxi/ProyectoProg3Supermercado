@@ -1,11 +1,14 @@
 package gui;
 
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import domain.Cliente;
+import domain.Productos;
+import io.LectorCSV;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -18,6 +21,11 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal(Cliente cliente) {
     	this.clienteActual = cliente;
+    	
+    	List<Productos> listaProductos = LectorCSV.cargarProductos("Resources/productosInfo.txt");
+
+    	System.out.println("Productos cargados: " + listaProductos.size());
+
         
         setTitle("MercaDeusto");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -27,7 +35,8 @@ public class VentanaPrincipal extends JFrame {
         
         // 1. INSTANCIAMOS EL CARRITO Y LOS PRODUCTOS UNA SOLA VEZ
         ventanaCarrito = new VentanaCarrito(clienteActual); 
-        panelProductos = new PanelPrincipalContenido(ventanaCarrito); 
+        panelProductos = new PanelPrincipalContenido(ventanaCarrito, listaProductos);
+        //panelProductos = new PanelPrincipalContenido(ventanaCarrito); 
 
         // CREACION PANEL NORTE 
         JPanel panelNorte = new JPanel();

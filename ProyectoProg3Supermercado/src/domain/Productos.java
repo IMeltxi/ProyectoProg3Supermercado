@@ -6,17 +6,19 @@ public class Productos {
 	private float precio;
 	private int stock;
 	private int id;
+	private String rutaImagen;
 	
 	public Productos() {	
 	}
 	
-	public Productos(String nombre, String descripcion, float precio, int stock, int id) {
+	public Productos(String nombre, String descripcion, float precio, int stock, int id, String rutaImagen) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.stock = stock;
 		this.id = id;
+		this.rutaImagen = rutaImagen;
 	}
 
 	public String getNombre() {
@@ -50,6 +52,14 @@ public class Productos {
 	
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getRutaImagen() {
+	    return rutaImagen;
+	}
+
+	public void setRutaImagen(String rutaImagen) {
+	    this.rutaImagen = rutaImagen;
 	}
 
 }

@@ -152,7 +152,7 @@ public class BD {
     			Integer stock = rs.getInt("STOCK");
     			String descripcion = rs.getString("DESCRIPCION");
     			
-    			Productos nuevop = new Productos(nombre,descripcion,precio,stock,id);
+    			Productos nuevop = new Productos(nombre,descripcion,precio,stock,id,"");
     			
     			productos.add(nuevop);
     			

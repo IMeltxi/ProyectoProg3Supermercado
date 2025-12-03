@@ -5,10 +5,14 @@ import javax.swing.table.DefaultTableModel;
 
 import db.BD;
 import domain.Cliente;
+import domain.Productos;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 
 // Asegúrate de mantener tus imports de io.* (ButtonEditor, etc.)
@@ -23,7 +27,7 @@ public class VentanaCarrito extends JPanel {
     private DefaultTableModel modeloTabla;
     private Cliente clienteLogueado;
 
-    String[] columnas = {"ID","Producto", "Cantidad", "Precio Unitario", "Precio Total", "Editar"};
+    String[] columnas = {"Imagen","Producto", "Cantidad", "Precio Unitario", "Precio Total", "Editar"};
 
 
     public VentanaCarrito(Cliente cliente) {
@@ -39,7 +43,8 @@ public class VentanaCarrito extends JPanel {
             
             @Override
             public Class<?> getColumnClass(int column) {
-                if (column == 2 || column == 3 || column == 4) return Double.class;
+            	if (column == 0) return ImageIcon.class; // Imagen
+                if (column == 2 || column == 3 || column == 4) return Double.class; // valores numéricos
                 return String.class;
             }
 
@@ -73,10 +78,12 @@ public class VentanaCarrito extends JPanel {
         tablaCarrito.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         tablaCarrito.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(tablaCarrito, modeloTabla));
         tablaCarrito.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
-        
-        cargarDatosBD();
+        tablaCarrito.setRowHeight(60);
+
+        //cargarDatosBD();
     }
     
+    /*
     private void cargarDatosBD() {
         if (clienteLogueado == null) return;
         
@@ -86,6 +93,7 @@ public class VentanaCarrito extends JPanel {
             modeloTabla.addRow(fila);
         }
     }
+    */
 
     private void recalcularFila(int row) {
         try {
@@ -101,13 +109,37 @@ public class VentanaCarrito extends JPanel {
         } catch (Exception e) {
         }
     }
-    public void agregarProducto(int idProducto, String nombre, double precio) {
-        if (clienteLogueado != null) {
-            BD.agregarProductoCarrito(clienteLogueado.getidCliente(), idProducto);
-            cargarDatosBD();
-        }
-    }
+    public void agregarProducto(Productos p) {
+        String ruta = p.getRutaImagen();
+        System.out.println("Ruta imagen: " + ruta);
 
+        ImageIcon icon = null;
+        if (ruta != null && new File(ruta).exists()) {
+            icon = new ImageIcon(new ImageIcon(ruta)
+                    .getImage()
+                    .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        } else {
+            System.out.println("❌ Imagen no encontrada: " + ruta);
+            icon = new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB));
+        }
+
+        double cantidad = 1.0;
+        double precioUnitario = p.getPrecio();
+        double total = cantidad * precioUnitario;
+
+        modeloTabla.addRow(new Object[]{
+            icon,               // Columna 0 → Imagen
+            p.getNombre(),      // Columna 1 → Nombre
+            cantidad,           // Columna 2 → Cantidad (por defecto 1)
+            precioUnitario,     // Columna 3 → Precio unitario
+            total,              // Columna 4 → Precio total
+            "Editar"            // Columna 5 → Botón Editar
+        });
+
+        tablaCarrito.revalidate();
+        tablaCarrito.repaint();
+    }
+    
 //    public void agregarProducto(String nombre, double precio) {
 //        // 1. Buscar si el producto ya existe en la tabla
 //        for (int i = 0; i < modeloTabla.getRowCount(); i++) {

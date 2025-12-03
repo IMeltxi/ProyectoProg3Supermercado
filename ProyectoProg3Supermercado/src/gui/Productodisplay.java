@@ -154,7 +154,7 @@ public class Productodisplay extends JPanel {
                         String descripcion = tabla.getValueAt(fila, 4).toString();
 
                         // Crear objeto temporal
-                        Productos p = new Productos(nombre, descripcion, precio, stock, id);
+                        Productos p = new Productos(nombre, descripcion, precio, stock, id, "");
                         
                         mostrarDialogoProducto(p);
                         
@@ -221,7 +221,7 @@ public class Productodisplay extends JPanel {
                         String desc = tabla.getValueAt(r, 4).toString();
 
                         // Creamos objeto temporal
-                        Productos p = new Productos(nom, desc, prec, stock, id);
+                        Productos p = new Productos(nom, desc, prec, stock, id, "");
                         mostrarDialogoProducto(p);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Error leyendo fila.");
@@ -287,7 +287,7 @@ public class Productodisplay extends JPanel {
                 int st = (int)sStock.getValue();
 
                 if (p == null) {
-                    Productos nuevo = new Productos(n, de, pr, st, 0);
+                    Productos nuevo = new Productos(n, de, pr, st, 0, "");
                     BD.insertarProducto(nuevo);
                 } else {
                     p.setNombre(n); p.setDescripcion(de);
