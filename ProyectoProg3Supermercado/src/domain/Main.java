@@ -59,6 +59,59 @@ public class Main {
 //     List<String> historial = BD.historialComprasCliente(1);
 //     historial.forEach(System.out::println);
 
-     /////////////
+     
+     // =========================================================================
+     		// --- INICIO: TEST DE PUNTOS RECURSIVOS (CANTIDAD EN COMPRA ACTUAL) ---
+     		// =========================================================================
+
+     		System.out.println("\n--- PRUEBA DE LÓGICA RECURSIVA (Dominio de Producto) ---");
+
+     		// 1. Catálogo de productos disponibles (necesario para saber los precios)
+     		// Constructor: nombre, descripcion, precio, stock, id, rutaImagen
+     		List<Productos> catalogoProductos = new ArrayList<>();
+     		Productos pLaptop = new Productos("Laptop Gamer", "Alta gama", 1000.0f, 10, 1, "n/a");
+     		Productos pRaton = new Productos("Raton Basico", "Oficina", 5.0f, 100, 2, "n/a"); // < 10 euros
+     		
+     		catalogoProductos.add(pLaptop);
+     		catalogoProductos.add(pRaton);
+
+     		// 2. Crear una Compra nueva (Carrito)
+     		Compra compraActual = new Compra();
+     		
+     		// 3. Llenamos el carrito
+     		// CASO A: Compramos 3 Laptops. 
+     		// La recursividad debería hacer: 
+     		//  - 1ª Laptop: 1000 * 1.0 = 1000
+     		//  - 2ª Laptop: 1000 * 1.3 = 1300
+     		//  - 3ª Laptop: 1000 * 1.6 = 1600
+     		//  Total esperado: 3900 puntos.
+     		compraActual.agregarProducto("Laptop Gamer", 3);
+     		
+     		// CASO B: Compramos 10 Ratones.
+     		// Precio 5.0 (< 10). La recursividad debería ignorarlos.
+     		compraActual.agregarProducto("Raton Basico", 10);
+
+     		// 4. Ejecutar el cálculo
+     		System.out.println("Calculando puntos para:");
+     		System.out.println(" - 3x Laptop Gamer (1000€ c/u)");
+     		System.out.println(" - 10x Raton Basico (5€ c/u)");
+     		
+     		double puntosObtenidos = compraActual.calcularPuntos(catalogoProductos);
+
+     		System.out.println("\nRESULTADO:");
+     		System.out.println("Puntos Totales: " + puntosObtenidos);
+     		
+     		// Verificación visual
+     		if (puntosObtenidos == 3900.0) {
+     			System.out.println("✅ PRUEBA EXITOSA: El cálculo progresivo es correcto (1000 + 1300 + 1600).");
+     		} else {
+     			System.out.println("❌ ALGO FALLÓ: El resultado no coincide con el esperado.");
+     		}
+     		System.out.println("--------------------------------------------------------\n");
+
+     		// =========================================================================
+     		// --- FIN TEST ---
+     		// =========================================================================       
+     
     }
 }

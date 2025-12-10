@@ -61,5 +61,7 @@ public class Productos {
 	public void setRutaImagen(String rutaImagen) {
 	    this.rutaImagen = rutaImagen;
 	}
+	
+	
 
 }
