@@ -69,6 +69,35 @@ public class VentanaCarrito extends JPanel {
                 }
             }
         });
+        
+        JPanel panelInferior = new JPanel();
+        JButton btnComprar = new JButton("Comprar");
+
+        btnComprar.addActionListener(e -> {
+            try {
+                if (modeloTabla.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "El carrito está vacío");
+                    return;
+                }
+
+                File carpeta = new File("facturas");
+                if (!carpeta.exists()) carpeta.mkdir();
+
+                File pdf = new File(carpeta, "factura_" + System.currentTimeMillis() + ".pdf");
+
+                io.FacturaPDF.generarFactura(clienteLogueado, tablaCarrito, pdf);
+
+                JOptionPane.showMessageDialog(this, "Factura generada correctamente");
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error generando factura");
+            }
+        });
+
+        panelInferior.add(btnComprar);
+        add(panelInferior, BorderLayout.SOUTH);
+
 
         tablaCarrito = new TablaTooltips(modeloTabla);
         
@@ -86,6 +115,8 @@ public class VentanaCarrito extends JPanel {
         tablaCarrito.setRowHeight(60);
 
         //cargarDatosBD();
+        
+        
     }
     
     /*
