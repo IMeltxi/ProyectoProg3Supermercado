@@ -109,11 +109,27 @@ public class VentanaPrincipal extends JFrame {
     		pCentral.revalidate();
     		pCentral.repaint();
     	});
+    	
+    	// Compra recursiva
+    	
+    	JButton CompraRecursiva = new JButton("CompraRecursiva");
+    	CompraRecursiva.setBackground(Color.BLUE);
+    	CompraRecursiva.setForeground(Color.WHITE);
+    	CompraRecursiva.setFont(new Font("SANS_SERIF", Font.BOLD, 20));
+    	CompraRecursiva.setBorder(new LineBorder(Color.black, 2));
+    	
+    	
         
         panelNorteIzquierda.add(botonMiLista);
-    		
+    	panelNorteIzquierda.add(CompraRecursiva);
+    	
     	panelNorte.add(panelNorteCentro, BorderLayout.CENTER);
     	panelNorte.add(panelNorteIzquierda, BorderLayout.WEST);
+    	
+    	CompraRecursiva.addActionListener(e ->{
+    		new Ventanacomprarecursiva(cliente);
+    		
+    	});
     			
     	// PANEL SUR
     	JPanel panelSur = new JPanel();
