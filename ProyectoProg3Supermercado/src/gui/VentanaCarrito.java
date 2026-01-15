@@ -70,73 +70,39 @@ public class VentanaCarrito extends JPanel {
             }
         });
         
-        JPanel panelInferior = new JPanel();
+
         
-//RECURSIVIDAD - CALCULO PUNTOS
-        
-        // 1. Crear componentes visuales
-        JButton btnCalcularPuntos = new JButton("Calcular Puntos (Recursivo)");
-        JLabel lblPuntos = new JLabel("Puntos estimados: 0.0");
-        lblPuntos.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Un poco de espacio
-
-        // 2. Acción del botón
-        btnCalcularPuntos.addActionListener(evt -> {
-            try {
-                // Instanciamos la clase Compra para usar su lógica
-                domain.Compra compraLogica = new domain.Compra();
-                
-                // Preparamos las estructuras de datos que necesita la clase Compra
-                java.util.HashMap<String, Integer> mapaProductosCompra = new java.util.HashMap<>();
-                java.util.ArrayList<domain.Productos> listaDetalles = new java.util.ArrayList<>();
-
-                // Recorremos el modelo de la tabla para extraer los datos
-                for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                    String nombre = (String) modeloTabla.getValueAt(i, 1);
-                    // Aseguramos conversión de tipos (la tabla suele tener Double, la lógica pide int/float)
-                    double cantDouble = Double.parseDouble(modeloTabla.getValueAt(i, 2).toString());
-                    int cantidad = (int) cantDouble;
-                    
-                    double precioDouble = Double.parseDouble(modeloTabla.getValueAt(i, 3).toString());
-                    float precio = (float) precioDouble;
-
-                    // Llenamos el mapa (necesario para la lógica: if (this.productos.containsKey(nombre)))
-                    mapaProductosCompra.put(nombre, cantidad);
-
-                    // Creamos un objeto Producto temporal para pasar a la lista recursiva.
-                    // Usamos un constructor básico o setters. Asumiendo el constructor visto en Ventanacomprarecursiva:
-                    // Productos(nombre, descripcion, precio, stock, id, imagen)
-                    // Ponemos datos dummy en lo que no sea nombre y precio, ya que la recursividad solo usa esos dos.
-                    domain.Productos pTemp = new domain.Productos(nombre, "Desc", precio, 100, 0, ""); 
-                    listaDetalles.add(pTemp);
-                }
-
-                // Pasamos el mapa a la instancia de compra
-                compraLogica.setProductos(mapaProductosCompra);
-
-                // 3. LLAMADA AL MÉTODO RECURSIVO ORIGINAL
-                double puntosTotales = compraLogica.calcularPuntos(listaDetalles);
-
-                // Actualizamos la etiqueta
-                lblPuntos.setText("Puntos estimados: " + String.format("%.2f", puntosTotales));
-                
-                JOptionPane.showMessageDialog(this, 
-                    "¡Cálculo recursivo completado!\nGanarás " + puntosTotales + " puntos con esta compra.",
-                    "Fidelidad", JOptionPane.INFORMATION_MESSAGE);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error calculando puntos: " + ex.getMessage());
-            }
-        });
-
-        // Añadimos los nuevos elementos al panel inferior (antes que el botón comprar)
-        panelInferior.add(lblPuntos);
-        panelInferior.add(btnCalcularPuntos);
         
      
-        
-        JButton btnComprar = new JButton("Comprar");
+        JPanel panelInferior = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        // 1. CheckBox para canjear puntos (100 puntos = 1 Euro)
+        double valorPuntos = clienteLogueado.getPuntos() / 100.0;
+        JCheckBox chkCanjear = new JCheckBox("Canjear mis " + clienteLogueado.getPuntos() + " puntos (-" + String.format("%.2f", valorPuntos) + "€)");
+        
+        // 2. Etiqueta informativa
+        JLabel lblPuntosGanar = new JLabel("(Ganarás puntos con esta compra)");
+        lblPuntosGanar.setForeground(java.awt.Color.BLUE);
+        lblPuntosGanar.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+        // 3. Botón Comprar
+        JButton btnComprar = new JButton("Comprar Ahora");
+        btnComprar.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        btnComprar.setBackground(new java.awt.Color(50, 200, 50)); // Color verde
+        btnComprar.setForeground(java.awt.Color.WHITE);
+
+        // Añadimos componentes al panel (Solo mostramos el check si tiene puntos)
+        if (valorPuntos > 0) {
+            panelInferior.add(chkCanjear);
+        }
+        panelInferior.add(lblPuntosGanar);
+        panelInferior.add(btnComprar);
+        
+        // Añadimos el panel a la ventana
+        add(panelInferior, BorderLayout.SOUTH);
+
+        
+        
         btnComprar.addActionListener(e -> {
             try {
                 if (modeloTabla.getRowCount() == 0) {
@@ -144,23 +110,98 @@ public class VentanaCarrito extends JPanel {
                     return;
                 }
 
-                File carpeta = new File("facturas");
+                // A) Calcular Total del Carrito
+                double totalCarrito = 0.0;
+                for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                    totalCarrito += Double.parseDouble(modeloTabla.getValueAt(i, 4).toString());
+                }
+
+                // B) Calcular Descuento (Si marca la casilla)
+                double descuento = 0.0;
+                int puntosGastados = 0;
+
+                if (chkCanjear.isSelected()) {
+                    double maxDescPuntos = clienteLogueado.getPuntos() / 100.0;
+                    
+                    if (maxDescPuntos >= totalCarrito) {
+                        // Si tiene puntos de sobra, la compra sale gratis
+                        descuento = totalCarrito;
+                        puntosGastados = (int) (totalCarrito * 100);
+                    } else {
+                        // Si no, gasta todos los puntos
+                        descuento = maxDescPuntos;
+                        puntosGastados = clienteLogueado.getPuntos();
+                    }
+                }
+
+                // C) Calcular Puntos NUEVOS (Usando tu lógica recursiva)
+                domain.Compra compraLogica = new domain.Compra();
+                java.util.HashMap<String, Integer> mapa = new java.util.HashMap<>();
+                java.util.ArrayList<domain.Productos> lista = new java.util.ArrayList<>();
+                
+                for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                     String nombre = modeloTabla.getValueAt(i, 1).toString();
+                     int cant = (int) Double.parseDouble(modeloTabla.getValueAt(i, 2).toString());
+                     float prec = (float) Double.parseDouble(modeloTabla.getValueAt(i, 3).toString());
+                     
+                     mapa.put(nombre, cant);
+                     // Creamos producto temporal para la recursividad
+                     lista.add(new domain.Productos(nombre, "", prec, 100, 0, ""));
+                }
+                compraLogica.setProductos(mapa);
+                
+                // NOTA: Recuerda que si el precio es < 10, tu recursividad devuelve 0.
+                int puntosGanados = (int) compraLogica.calcularPuntos(lista);
+
+
+                // D) Generar PDF (Pasando el descuento)
+                java.io.File carpeta = new java.io.File("facturas");
                 if (!carpeta.exists()) carpeta.mkdir();
+                java.io.File pdf = new java.io.File(carpeta, "factura_" + System.currentTimeMillis() + ".pdf");
+                
+                // IMPORTANTE: Asegúrate de haber actualizado FacturaPDF.java como te dije en el paso anterior
+                io.FacturaPDF.generarFactura(clienteLogueado, tablaCarrito, pdf, descuento);
 
-                File pdf = new File(carpeta, "factura_" + System.currentTimeMillis() + ".pdf");
 
-                io.FacturaPDF.generarFactura(clienteLogueado, tablaCarrito, pdf);
+                // E) ACTUALIZAR BASE DE DATOS Y CLIENTE
+                int saldoFinal = clienteLogueado.getPuntos() - puntosGastados + puntosGanados;
 
-                JOptionPane.showMessageDialog(this, "Factura generada correctamente");
+                // Actualizar memoria
+                clienteLogueado.setPuntos(saldoFinal);
+                // Actualizar BD (Asegúrate de haber puesto el método en BD.java)
+                BD.actualizarPuntosCliente(clienteLogueado.getidCliente(), saldoFinal);
+                
+                // Mensaje resumen
+                String mensaje = String.format("Compra realizada con éxito.\n\n" +
+                                 "Total: %.2f €\n" +
+                                 "Descuento: -%.2f €\n" +
+                                 "--------------------\n" +
+                                 "PAGADO: %.2f €\n\n" +
+                                 "Puntos usados: %d\n" +
+                                 "Puntos ganados: %d\n" +
+                                 "Nuevo saldo: %d puntos", 
+                                 totalCarrito, descuento, (totalCarrito - descuento), 
+                                 puntosGastados, puntosGanados, saldoFinal);
+                                 
+                JOptionPane.showMessageDialog(this, mensaje, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
+
+                // Actualizar la interfaz para la próxima compra
+                double nuevoValor = saldoFinal / 100.0;
+                chkCanjear.setText("Canjear mis " + saldoFinal + " puntos (-" + String.format("%.2f", nuevoValor) + "€)");
+                chkCanjear.setSelected(false);
+                if (saldoFinal > 0 && !chkCanjear.isShowing()) {
+                    panelInferior.add(chkCanjear, 0); // Añadir el check si antes no estaba y ahora tenemos puntos
+                    panelInferior.revalidate();
+                }
+
+                // Opcional: Limpiar carrito visual
+                // modeloTabla.setRowCount(0);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error generando factura");
+                JOptionPane.showMessageDialog(this, "Error en la compra: " + ex.getMessage());
             }
         });
-
-        panelInferior.add(btnComprar);
-        add(panelInferior, BorderLayout.SOUTH);
 
 
         tablaCarrito = new TablaTooltips(modeloTabla);

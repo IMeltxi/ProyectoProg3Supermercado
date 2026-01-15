@@ -426,5 +426,19 @@ public class BD {
     }
 
     
+ // --- MÉTODO PARA ACTUALIZAR PUNTOS ---
+    public static void actualizarPuntosCliente(int idCliente, int puntos) {
+        if (con == null) conectar();
+        String sql = "UPDATE CLIENTE SET PUNTOS = ? WHERE ID_CLIENTE = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, puntos);
+            stmt.setInt(2, idCliente);
+            stmt.executeUpdate();
+            System.out.println("Puntos actualizados para el cliente " + idCliente + ": " + puntos);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     
 }
