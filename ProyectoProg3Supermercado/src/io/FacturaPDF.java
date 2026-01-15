@@ -16,7 +16,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 public class FacturaPDF {
 
-    public static void generarFactura(Cliente cliente, JTable tabla, File destino) throws IOException {
+    public static void generarFactura(Cliente cliente, JTable tabla, File destino,double descuento) throws IOException {
 
         PDDocument doc = new PDDocument();
         PDPage page = new PDPage(PDRectangle.A4);
@@ -63,6 +63,9 @@ public class FacturaPDF {
         double totalCompra = 0.0;
 
         for (int i = 0; i < m.getRowCount(); i++) {
+        	
+        	if (m.getValueAt(i, 1) == null) continue;
+        	
             String nombre = m.getValueAt(i, 1).toString();
             double cantidad = Double.parseDouble(m.getValueAt(i, 2).toString());
             double precio = Double.parseDouble(m.getValueAt(i, 3).toString());
@@ -81,7 +84,24 @@ public class FacturaPDF {
 
         y -= 20;
 
-        // ====== TOTAL ======
+     // ====== TOTALES y DESCUENTOS ======
+        // Subtotal (si hay descuento)
+        if (descuento > 0) {
+            cs.beginText();
+            cs.setFont(PDType1Font.HELVETICA, 12);
+            cs.newLineAtOffset(margin, y);
+            cs.showText("Subtotal: " + String.format("%.2f €", totalCompra));
+            cs.endText();
+            y -= 15;
+
+            cs.beginText();
+            cs.setFont(PDType1Font.HELVETICA, 12);
+            cs.newLineAtOffset(margin, y);
+            cs.showText("Descuento (Puntos): -" + String.format("%.2f €", descuento));
+            cs.endText();
+            y -= 20;
+        }
+        //Total final
         cs.beginText();
         cs.setFont(PDType1Font.HELVETICA_BOLD, 13);
         cs.newLineAtOffset(margin, y);

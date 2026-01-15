@@ -87,6 +87,8 @@ public class RegistroSesion extends JFrame {
         JButton btnRegistrar = new JButton("Registrarse");
         panelCentro.add(btnRegistrar, gbc);
         
+        
+        
         btnRegistrar.addActionListener(e -> {
             
             // Obtener datos
@@ -134,6 +136,18 @@ public class RegistroSesion extends JFrame {
         gbc.gridy++;
         JButton btnEmpleado = new JButton("Empleado");
         panelCentro.add(btnEmpleado, gbc);
+        
+        gbc.gridy++;
+        JButton btnVolver = new JButton("Volver atrás");
+        panelCentro.add(btnVolver, gbc);
+        
+        
+        btnVolver.addActionListener(e -> {
+            IniciarSesion inicioSesion = new IniciarSesion();
+            inicioSesion.setVisible(true);
+            this.dispose(); // 
+        });
+
 
         // Agregar el panel al principal
         panel.add(panelCentro, BorderLayout.CENTER);
