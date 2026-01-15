@@ -40,7 +40,12 @@ public class VentanaCarrito extends JPanel {
         setLayout(new BorderLayout());
 
         modeloTabla = new DefaultTableModel(null, columnas) {
-        	@Override
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return column == 2 || column == 5;
             }

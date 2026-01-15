@@ -100,7 +100,12 @@ public class Ventanagestion extends JFrame {
     private void cargarTablaUsuarios() {
         String[] columnas = {"ID", "Nombre", "Apellido", "Fecha Nac.", "Email", "Tipo", "Puntos", "Eliminar"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return column == 7; // Solo la columna eliminar editable
             }
@@ -130,7 +135,12 @@ public class Ventanagestion extends JFrame {
 	private void cargarTablaProductos() {
         String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Stock", "Eliminar"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return column == 5; // Solo eliminar editable
             }
@@ -208,7 +218,11 @@ public class Ventanagestion extends JFrame {
 
     // Editor de botón para productos
     private static class ButtonEditorProductos extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private JButton button;
         private DefaultTableModel model;
         private List<Productos> lista;
 
