@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 

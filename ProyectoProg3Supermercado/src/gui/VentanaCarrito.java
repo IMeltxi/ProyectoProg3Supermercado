@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 
 import db.BD;
 import domain.Cliente;
+import domain.Compra;
 import domain.Productos;
 
 import javax.swing.event.TableModelEvent;
@@ -13,11 +14,14 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 // Asegúrate de mantener tus imports de io.* (ButtonEditor, etc.)
 import io.ButtonEditor;
 import io.ButtonRenderer;
+import io.FacturaPDF;
 import io.SpinnerEditor;
 import io.TablaTooltips;
 
@@ -122,85 +126,76 @@ public class VentanaCarrito extends JPanel {
 
                 if (chkCanjear.isSelected()) {
                     double maxDescPuntos = clienteLogueado.getPuntos() / 100.0;
-                    
-                    if (maxDescPuntos >= totalCarrito) {
-                        // Si tiene puntos de sobra, la compra sale gratis
-                        descuento = totalCarrito;
-                        puntosGastados = (int) (totalCarrito * 100);
-                    } else {
-                        // Si no, gasta todos los puntos
-                        descuento = maxDescPuntos;
-                        puntosGastados = clienteLogueado.getPuntos();
-                    }
+                    descuento = Math.min(maxDescPuntos, totalCarrito);
+                    puntosGastados = (int) (descuento * 100);
                 }
 
                 // C) Calcular Puntos NUEVOS (Usando tu lógica recursiva)
-                domain.Compra compraLogica = new domain.Compra();
-                java.util.HashMap<String, Integer> mapa = new java.util.HashMap<>();
-                java.util.ArrayList<domain.Productos> lista = new java.util.ArrayList<>();
+                Compra compraLogica = new Compra();
+                HashMap<String, Integer> mapaProductos = new HashMap<>();
+                ArrayList<Productos> lista = new ArrayList<>();
+                List<Object[]> itemsParaBD = new ArrayList<>();
                 
                 for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                	int id = (int) modeloTabla.getValueAt(i, 6);
                      String nombre = modeloTabla.getValueAt(i, 1).toString();
-                     int cant = (int) Double.parseDouble(modeloTabla.getValueAt(i, 2).toString());
-                     float prec = (float) Double.parseDouble(modeloTabla.getValueAt(i, 3).toString());
+                     int cant = ((Double) modeloTabla.getValueAt(i, 2)).intValue();
+                     float prec = ((Double) modeloTabla.getValueAt(i, 3)).floatValue();
                      
-                     mapa.put(nombre, cant);
+                     mapaProductos.put(nombre, cant);
                      // Creamos producto temporal para la recursividad
-                     lista.add(new domain.Productos(nombre, "", prec, 100, 0, ""));
+                     lista.add(new domain.Productos(nombre, "", prec, 100, id, ""));
+                     
+                     itemsParaBD.add(new Object[]{id, nombre, (double)cant, (double)prec});
                 }
-                compraLogica.setProductos(mapa);
+                compraLogica.setProductos(mapaProductos);
                 
                 // NOTA: Recuerda que si el precio es < 10, tu recursividad devuelve 0.
                 int puntosGanados = (int) compraLogica.calcularPuntos(lista);
 
 
                 // D) Generar PDF (Pasando el descuento)
-                java.io.File carpeta = new java.io.File("facturas");
+                File carpeta = new File("facturas");
                 if (!carpeta.exists()) carpeta.mkdir();
-                java.io.File pdf = new java.io.File(carpeta, "factura_" + System.currentTimeMillis() + ".pdf");
+                File pdf = new File(carpeta, "factura_" + System.currentTimeMillis() + ".pdf");
                 
                 // IMPORTANTE: Asegúrate de haber actualizado FacturaPDF.java como te dije en el paso anterior
-                io.FacturaPDF.generarFactura(clienteLogueado, tablaCarrito, pdf, descuento);
+                FacturaPDF.generarFactura(clienteLogueado, tablaCarrito, pdf, descuento);
 
-
-                // E) ACTUALIZAR BASE DE DATOS Y CLIENTE
-                int saldoFinal = clienteLogueado.getPuntos() - puntosGastados + puntosGanados;
-
-                // Actualizar memoria
-                clienteLogueado.setPuntos(saldoFinal);
-                // Actualizar BD (Asegúrate de haber puesto el método en BD.java)
-                BD.actualizarPuntosCliente(clienteLogueado.getidCliente(), saldoFinal);
                 
-                // Mensaje resumen
-                String mensaje = String.format("Compra realizada con éxito.\n\n" +
-                                 "Total: %.2f €\n" +
-                                 "Descuento: -%.2f €\n" +
-                                 "--------------------\n" +
-                                 "PAGADO: %.2f €\n\n" +
-                                 "Puntos usados: %d\n" +
-                                 "Puntos ganados: %d\n" +
-                                 "Nuevo saldo: %d puntos", 
-                                 totalCarrito, descuento, (totalCarrito - descuento), 
-                                 puntosGastados, puntosGanados, saldoFinal);
-                                 
-                JOptionPane.showMessageDialog(this, mensaje, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
+                // E) PROCESAR COMPRA EN BASE DE DATOS (Stock, Historial y Vaciar Carrito)
+                double importePagado = totalCarrito - descuento;
+                boolean exitoBD = BD.procesarCompra(clienteLogueado.getidCliente(), itemsParaBD, importePagado);
 
-                // Actualizar la interfaz para la próxima compra
-                double nuevoValor = saldoFinal / 100.0;
-                chkCanjear.setText("Canjear mis " + saldoFinal + " puntos (-" + String.format("%.2f", nuevoValor) + "€)");
-                chkCanjear.setSelected(false);
-                if (saldoFinal > 0 && !chkCanjear.isShowing()) {
-                    panelInferior.add(chkCanjear, 0); // Añadir el check si antes no estaba y ahora tenemos puntos
-                    panelInferior.revalidate();
+                if (exitoBD) {
+                    // 6. Actualizar puntos si la transacción fue exitosa
+                    int saldoFinal = clienteLogueado.getPuntos() - puntosGastados + puntosGanados;
+                    clienteLogueado.setPuntos(saldoFinal);
+                    BD.actualizarPuntosCliente(clienteLogueado.getidCliente(), saldoFinal);
+
+                    // 7. Mostrar resumen y limpiar interfaz
+                    String mensaje = String.format("Compra realizada con éxito.\n\n" +
+                                     "Total: %.2f €\n" +
+                                     "PAGADO: %.2f €\n\n" +
+                                     "Nuevo saldo: %d puntos", 
+                                     totalCarrito, importePagado, saldoFinal);
+                    
+                    JOptionPane.showMessageDialog(this, mensaje, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    // Limpiar la tabla visualmente
+                    modeloTabla.setRowCount(0);
+                    chkCanjear.setSelected(false);
+                    if (saldoFinal <= 0) chkCanjear.setVisible(false);
+                    
+                } else {
+                    JOptionPane.showMessageDialog(this, "Hubo un error al procesar la compra en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                // Opcional: Limpiar carrito visual
-                // modeloTabla.setRowCount(0);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error en la compra: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error crítico: " + ex.getMessage());
             }
+
         });
 
 

@@ -9,7 +9,12 @@ import java.awt.*;
 
 public class RegistroSesion extends JFrame {
 
-    public RegistroSesion() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public RegistroSesion() {
         // Configuración básica de la ventana
         setTitle("Registro");
         setExtendedState(JFrame.MAXIMIZED_BOTH);

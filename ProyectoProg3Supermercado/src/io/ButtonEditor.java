@@ -12,11 +12,15 @@ import javax.swing.table.TableCellEditor;
 
 public class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
 
-    private JButton button;
-    private JTable table;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JButton button;
+//    private JTable table;
 
     public ButtonEditor(JTable table, DefaultTableModel model) {
-        this.table = table;
+//        this.table = table;
 
         button = new JButton("Eliminar");
         button.addActionListener(new ActionListener() {

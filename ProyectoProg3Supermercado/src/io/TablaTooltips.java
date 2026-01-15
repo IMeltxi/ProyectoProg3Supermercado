@@ -8,6 +8,11 @@ import javax.swing.table.TableModel;
 
 public class TablaTooltips extends JTable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public TablaTooltips(TableModel modelo) {
 		super(modelo);
 	}

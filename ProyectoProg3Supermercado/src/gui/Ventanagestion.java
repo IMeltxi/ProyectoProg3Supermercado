@@ -126,7 +126,8 @@ public class Ventanagestion extends JFrame {
     }
 
     // Tabla de productos con columna eliminar
-    private void cargarTablaProductos() {
+    @SuppressWarnings("unused")
+	private void cargarTablaProductos() {
         String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Stock", "Eliminar"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0) {
             @Override
@@ -154,7 +155,11 @@ public class Ventanagestion extends JFrame {
 
     // Renderer de botón
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
-        public ButtonRenderer() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public ButtonRenderer() {
             setOpaque(true);
         }
         @Override
@@ -168,9 +173,15 @@ public class Ventanagestion extends JFrame {
 
     // Editor de botón para usuarios
     private static class ButtonEditorUsuarios extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
-        private DefaultTableModel model;
-        private List<Cliente> lista;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private JButton button;
+        @SuppressWarnings("unused")
+		private DefaultTableModel model;
+        @SuppressWarnings("unused")
+		private List<Cliente> lista;
 
         public ButtonEditorUsuarios(DefaultTableModel model, List<Cliente> lista) {
             this.model = model;

@@ -14,7 +14,11 @@ import domain.Productos;
 import db.BD; 
 
 public class IniciarSesion extends JFrame {
-    private JTextField correoField;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField correoField;
     private JPasswordField contrasenaField;
 
     private List<Cliente> clientes;

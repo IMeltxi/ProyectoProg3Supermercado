@@ -8,18 +8,15 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import io.LectorCSV; // <-- IMPORTANTE
 import domain.Productos;
 
 public class PanelPrincipalContenido extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private VentanaCarrito carritoRef; 
-    private List<Productos> listaProductos;
 
     public PanelPrincipalContenido(VentanaCarrito carrito, List<Productos> listaProductos) {
         this.carritoRef = carrito; 
-        this.listaProductos = listaProductos;
         
         setBackground(Color.WHITE);
 

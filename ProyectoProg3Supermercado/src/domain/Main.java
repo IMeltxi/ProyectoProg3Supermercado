@@ -3,7 +3,6 @@ import db.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 
 import gui.VentanaCargando;
 
@@ -13,6 +12,11 @@ public class Main {
     	BD.conectar();
     	
     	BD.crearTablas();
+    	
+    	Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Cerrando aplicación y base de datos...");
+            BD.desconectar();
+        }));
     	
         // --- Productos ---
     	/*

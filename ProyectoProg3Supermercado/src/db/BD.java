@@ -440,5 +440,57 @@ public class BD {
         }
     }
     
+    public static boolean procesarCompra(int idCliente, List<Object[]> itemsCarrito, double totalPuntos) {
+        String sqlInsertDetalle = "INSERT INTO DETALLE_COMPRA (ID_COMPRA, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?, ?)";
+        String sqlUpdateStock = "UPDATE PRODUCTO SET STOCK = STOCK - ? WHERE ID_PRODUCTO = ?";
+        String sqlDeleteCarrito = "DELETE FROM CARRITO WHERE ID_CLIENTE = ?";
+
+        try {
+            con.setAutoCommit(false); // Iniciamos transacción
+
+            // 1. Crear la cabecera de la compra
+            int idCompra = insertarCompra(idCliente, totalPuntos, "COMPLETADA"); 
+            
+            if (idCompra == -1) throw new SQLException("No se pudo generar el ID de compra");
+
+            for (Object[] row : itemsCarrito) {
+                int idProd = (int) row[0];
+                int cantidad = ((Double) row[2]).intValue();
+                double precio = (double) row[3];
+
+                // 2. Insertar detalle
+                try (PreparedStatement stDetalle = con.prepareStatement(sqlInsertDetalle)) {
+                    stDetalle.setInt(1, idCompra);
+                    stDetalle.setInt(2, idProd);
+                    stDetalle.setInt(3, cantidad);
+                    stDetalle.setDouble(4, precio);
+                    stDetalle.executeUpdate();
+                }
+
+                // 3. Restar Stock
+                try (PreparedStatement stStock = con.prepareStatement(sqlUpdateStock)) {
+                    stStock.setInt(1, cantidad);
+                    stStock.setInt(2, idProd);
+                    stStock.executeUpdate();
+                }
+            }
+
+            // 4. Vaciar Carrito
+            try (PreparedStatement stDel = con.prepareStatement(sqlDeleteCarrito)) {
+                stDel.setInt(1, idCliente);
+                stDel.executeUpdate();
+            }
+
+            con.commit(); // Consolidar cambios
+            return true;
+        } catch (SQLException e) {
+            try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { con.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+    
     
 }
