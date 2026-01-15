@@ -115,7 +115,7 @@ public class Compra extends Productos {
 			int cantidadComprada = this.productos.get(nombre);
 
 			// Filtro: Solo calculamos si el precio es > 10 (según tu regla anterior)
-			if (precio > 10) {
+			if (precio > 5) {
 				// Llamamos a la segunda recursividad para calcular el "bonus por cantidad"
 				puntosEsteProducto = calcularPuntosPorCantidad(precio, cantidadComprada);
 			}

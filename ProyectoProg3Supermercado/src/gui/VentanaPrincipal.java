@@ -67,6 +67,7 @@ public class VentanaPrincipal extends JFrame {
     	labelTituloGrande.setFont(new Font("SansSerif", Font.BOLD, 40)); 
     	labelTituloGrande.setForeground(Color.WHITE); 
     	
+    	
     	panelNorteCentro.add(labelLogo);
     	panelNorteCentro.add(labelTituloGrande);
     			
@@ -168,4 +169,7 @@ public class VentanaPrincipal extends JFrame {
     	setLocationRelativeTo(null);
         setVisible(true);
     }
+    
+    
+    
 }

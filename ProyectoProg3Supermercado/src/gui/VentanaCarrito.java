@@ -71,6 +71,75 @@ public class VentanaCarrito extends JPanel {
         });
         
         JPanel panelInferior = new JPanel();
+        
+// --- INICIO CÓDIGO NUEVO PARA PUNTOS RECURSIVOS ---
+        
+        // 1. Crear componentes visuales
+        JButton btnCalcularPuntos = new JButton("Calcular Puntos (Recursivo)");
+        JLabel lblPuntos = new JLabel("Puntos estimados: 0.0");
+        lblPuntos.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Un poco de espacio
+
+        // 2. Acción del botón
+        btnCalcularPuntos.addActionListener(evt -> {
+            try {
+                // Instanciamos la clase Compra para usar su lógica
+                domain.Compra compraLogica = new domain.Compra();
+                
+                // Preparamos las estructuras de datos que necesita la clase Compra
+                java.util.HashMap<String, Integer> mapaProductosCompra = new java.util.HashMap<>();
+                java.util.ArrayList<domain.Productos> listaDetalles = new java.util.ArrayList<>();
+
+                // Recorremos el modelo de la tabla para extraer los datos
+                for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                    String nombre = (String) modeloTabla.getValueAt(i, 1);
+                    // Aseguramos conversión de tipos (la tabla suele tener Double, la lógica pide int/float)
+                    double cantDouble = Double.parseDouble(modeloTabla.getValueAt(i, 2).toString());
+                    int cantidad = (int) cantDouble;
+                    
+                    double precioDouble = Double.parseDouble(modeloTabla.getValueAt(i, 3).toString());
+                    float precio = (float) precioDouble;
+
+                    // Llenamos el mapa (necesario para la lógica: if (this.productos.containsKey(nombre)))
+                    mapaProductosCompra.put(nombre, cantidad);
+
+                    // Creamos un objeto Producto temporal para pasar a la lista recursiva.
+                    // Usamos un constructor básico o setters. Asumiendo el constructor visto en Ventanacomprarecursiva:
+                    // Productos(nombre, descripcion, precio, stock, id, imagen)
+                    // Ponemos datos dummy en lo que no sea nombre y precio, ya que la recursividad solo usa esos dos.
+                    domain.Productos pTemp = new domain.Productos(nombre, "Desc", precio, 100, 0, ""); 
+                    listaDetalles.add(pTemp);
+                }
+
+                // Pasamos el mapa a la instancia de compra
+                compraLogica.setProductos(mapaProductosCompra);
+
+                // 3. LLAMADA AL MÉTODO RECURSIVO ORIGINAL
+                double puntosTotales = compraLogica.calcularPuntos(listaDetalles);
+
+                // Actualizamos la etiqueta
+                lblPuntos.setText("Puntos estimados: " + String.format("%.2f", puntosTotales));
+                
+                JOptionPane.showMessageDialog(this, 
+                    "¡Cálculo recursivo completado!\nGanarás " + puntosTotales + " puntos con esta compra.",
+                    "Fidelidad", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error calculando puntos: " + ex.getMessage());
+            }
+        });
+
+        // Añadimos los nuevos elementos al panel inferior (antes que el botón comprar)
+        panelInferior.add(lblPuntos);
+        panelInferior.add(btnCalcularPuntos);
+        
+        // --- FIN CÓDIGO NUEVO ---
+        
+        
+        
+        
+        
+        
         JButton btnComprar = new JButton("Comprar");
 
         btnComprar.addActionListener(e -> {
