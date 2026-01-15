@@ -72,7 +72,7 @@ public class VentanaCarrito extends JPanel {
         
         JPanel panelInferior = new JPanel();
         
-// --- INICIO CÓDIGO NUEVO PARA PUNTOS RECURSIVOS ---
+//RECURSIVIDAD - CALCULO PUNTOS
         
         // 1. Crear componentes visuales
         JButton btnCalcularPuntos = new JButton("Calcular Puntos (Recursivo)");
@@ -133,12 +133,7 @@ public class VentanaCarrito extends JPanel {
         panelInferior.add(lblPuntos);
         panelInferior.add(btnCalcularPuntos);
         
-        // --- FIN CÓDIGO NUEVO ---
-        
-        
-        
-        
-        
+     
         
         JButton btnComprar = new JButton("Comprar");
 
