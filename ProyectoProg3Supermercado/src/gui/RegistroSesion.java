@@ -17,10 +17,13 @@ public class RegistroSesion extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
+        
+        
         // Panel principal
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+        
+        
       
 
         // Panel central (formulario)
